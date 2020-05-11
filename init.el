@@ -1,3 +1,4 @@
+;; TODO: evil-surround, evil-goggles, boss-theme inherit ivy colors from isearch
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
@@ -36,6 +37,7 @@
 (global-visual-line-mode t)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
+(defun print-type (var) (print (type-of var)))
 (use-package general
   :ensure t
   :config
@@ -54,7 +56,8 @@
         evil-insert-state-tag "Insert"
         evil-visual-state-tag "Visual"
         evil-motion-state-tag "Motion"
-        evil-emacs-state-tag  "Emacs")
+        evil-emacs-state-tag  "Emacs"
+	evil-want-keybinding nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
   (setq-default evil-cross-lines t)
@@ -76,6 +79,12 @@
    :states 'insert
    "TAB" 'tab-to-tab-stop)
   (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -104,9 +113,31 @@
   :ensure t
   :config
   (general-define-key
-   :states 'normal
-   "/" 'swiper
-   ))
+    :states 'normal
+    "/" 'swiper))
+
+(use-package w3m
+  :ensure t
+  :init
+  (setq w3m-command (locate-file "w3m" exec-path)
+        browse-url-browser-function 'w3m-browse-url
+        w3m-session-crash-recovery nil
+        w3m-use-cookies t
+        w3m-use-tab nil)
+  (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t))
+
+;;(defun w3m-mode-settings ()
+;;  (evil-normal-state)
+;;  (local-set-key (kbd "RET") 'w3m-view-this-url))
+;;(add-hook 'w3m-mode-hook 'w3m-mode-settings)
+
+(defun google (query)
+  (interactive "sgoogle: ")
+  (catch 'quit
+	(when (string= query "q")
+	      (throw 'quit nil)))
+  (w3m)
+  (w3m-goto-url (concat "google.com/search?q=" query)))
 
 (use-package ein
   :ensure t
@@ -149,6 +180,7 @@
   :prefix "SPC"
   "w"  'cg-window/body
   "o"  'evil-ex-nohighlight
+  "g"  'google
   "rd" 'rainbow-delimiters-mode)
 
 (general-define-key
@@ -176,9 +208,9 @@
   (catch 'quit
 	(call-interactively 'elscreen-screen-nickname)
 	(when (equal (elscreen-get-screen-nickname (elscreen-get-current-screen))
-		      "q")
+			"q")
 	      (progn (elscreen-kill)
-		     (throw 'quit nil)))))
+			(throw 'quit nil)))))
 
 (setq-default mode-line-format
   (list "    "
@@ -192,12 +224,12 @@
                     (directory-file-name default-directory))))
         "    "
 		'(:eval (when (bound-and-true-p linum-mode)
-		      (cond ((buffer-modified-p) "[+] ")
-			    (buffer-read-only "[x] "))))
+				  (cond ((buffer-modified-p) "[+] ")
+						(buffer-read-only "[x] "))))
         '(:eval mode-line-buffer-identification 'face 'bold)
 		"    "
         '(:eval (if (bound-and-true-p linum-mode)
-		    "Line: %l Col: %c"
+			"Line: %l Col: %c"
 		    "-"))
 		"   "
 		'(:eval (if vc-mode vc-mode " -"))

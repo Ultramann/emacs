@@ -5,12 +5,13 @@
 					 (call-interactively 'evil-window-right)))
   "
 ^Horizonal^
--------------------------------------
-_b_: buffer    _f_: file    _n_: none
+---------------------------------------------------
+_b_: buffer    _f_: file    _g_: google    _n_: none
 [_q_]: quit
 "
   ("b" ivy-switch-buffer)
   ("f" counsel-find-file)
+  ("g" google)
   ("n" nil)
   ("q" delete-window))
 
@@ -21,12 +22,13 @@ _b_: buffer    _f_: file    _n_: none
 				       (call-interactively 'evil-window-down)))
   "
 ^Vertical^
--------------------------------------
-_b_: buffer    _f_: file    _n_: none
+----------------------------------------------------
+_b_: buffer    _f_: file    _g_: google    _n_: none
 [_q_]: quit
 "
   ("b" ivy-switch-buffer)
   ("f" counsel-find-file)
+  ("g" google)
   ("n" nil)
   ("q" delete-window))
 
