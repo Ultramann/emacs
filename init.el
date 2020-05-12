@@ -175,9 +175,7 @@
 	(mapcar (lambda (cmd) (cons (car cmd) (cdr cmd)))
 		(default-value 'evil-ex-commands)))
   (evil-ex-define-cmd "q"  'with-editor-cancel)
-  (evil-ex-define-cmd "wq" '(lambda () (interactive)
-			      (save-buffer)
-			      (with-editor-finish))))
+  (evil-ex-define-cmd "wq" 'with-editor-finish))
 (add-hook 'git-commit-mode-hook 'magit-ex-cmd)
 
 (use-package rainbow-delimiters

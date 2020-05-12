@@ -88,12 +88,6 @@
    `(font-lock-variable-name-face ((t :inherit default)))
    `(font-lock-warning-face ((t :foreground ,boss-mono-dark :bold t)))
 
-   ;; mode-line
-   `(mode-line ((t :foreground ,boss-mono-light :background ,boss-bg-light)))
-   `(mode-line-buffer-id ((t :weight bold)))
-   `(mode-line-emphasis ((t :weight bold)))
-   `(mode-line-inactive ((t :background ,boss-bg-shadow)))
-
    ;; company-mode
    `(company-tooltip ((t :foreground ,boss-fg :background ,boss-mono-dark)))
    `(company-tooltip-annotation ((t :foreground ,boss-mono-med :background ,boss-mono-dark)))
@@ -130,9 +124,9 @@
    `(ivy-minibuffer-match-face-4 ((t :inherit isearch)))
 
    ;; git-commit
-   `(git-commit-comment-action  ((t :foreground ,boss-green-bright :weight bold)))
+   `(git-commit-comment-action  ((t :foreground ,boss-green :weight bold)))
    `(git-commit-comment-branch  ((t :foreground ,boss-blue :weight bold)))
-   `(git-commit-comment-heading ((t :foreground ,boss-red-bright :weight bold)))
+   `(git-commit-comment-heading ((t :foreground ,boss-red :weight bold)))
 
    ;; magit
    `(magit-section-heading ((t :foreground ,boss-red :weight bold)))
@@ -217,16 +211,22 @@
    `(eshell-ls-unreadable ((t :foreground ,boss-fg)))
    `(nobreak-space ((t :foreground nil :background nil)))
 
-   ;; linum
-   `(linum ((t :foreground ,boss-mono-light :background ,boss-bg-light)))
-   `(linum-highlight-face ((t :foreground ,boss-bg :background ,boss-mono-light)))
-
    ;; w3m
    `(w3m-anchor ((t :foreground ,boss-base-med)))
    `(w3m-image-anchor ((t :foreground ,boss-mono-dark :background ,boss-bg)))
    `(w3m-arrived-anchor ((t :foreground ,boss-purple :background ,boss-bg)))
    `(w3m-header-line-content ((t :foreground ,boss-base-light :background ,boss-bg-light)))
    `(w3m-header-line-title ((t :foreground ,boss-yellow :background ,boss-bg-light)))
+
+   ;; linum
+   `(linum ((t :foreground ,boss-mono-light :background ,boss-bg-light)))
+   `(linum-highlight-face ((t :foreground ,boss-bg :background ,boss-mono-light)))
+
+   ;; mode-line
+   `(mode-line ((t :background ,boss-mono-light :foreground ,boss-bg-light)))
+   `(mode-line-buffer-id ((t :weight bold)))
+   `(mode-line-emphasis ((t :weight bold)))
+   `(mode-line-inactive ((t :background ,boss-bg-shadow)))
    ))
 
 
