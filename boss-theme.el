@@ -57,6 +57,8 @@
    `(highlight ((t :background ,boss-bg-highlight)))
    `(vertical-border ((t :foreground ,boss-mono-dark)))
    `(secondary-selection ((t :background ,boss-mono-dark)))
+   `(trailing-whitespace ((t :foreground ,boss-red-bright :underline t)))
+   
    `(query-replace ((t :inherit isearch)))
    `(minibuffer-prompt ((t :foreground ,boss-mono-light)))
    `(show-paren-mismatch ((t :background ,boss-pink)))
@@ -193,20 +195,14 @@
    `(magit-reflog-remote ((t :foreground ,boss-base-med)))
    `(magit-reflog-other ((t :foreground ,boss-base-med)))
 
+   ;; markdown
+   `(markdown-list-face ((t :foreground ,boss-red)))
+
    ;; hydra
    `(hydra-face-teal ((t :foreground ,boss-base-light)))
    `(hydra-face-amaranth ((t :foreground ,boss-red-bright)))
 
-   ;; term
-   `(term-color-black ((t :foreground ,boss-fg)))
-   `(term-color-blue ((t :foreground ,boss-base-dark)))
-   `(term-color-cyan ((t :foreground ,boss-base-med)))
-   `(term-color-green ((t :foreground ,boss-green-bright)))
-   `(term-color-magenta ((t :foreground ,boss-purple)))
-   `(term-color-red ((t :foreground ,boss-red-bright)))
-   `(term-color-white ((t :foreground ,boss-fg)))
-   `(term-color-yellow ((t :foreground ,boss-red)))
-
+   ;; eshell
    `(eshell-prompt ((t :foreground ,boss-base-dark)))
    `(eshell-ls-executable ((t :foreground ,boss-green-bright)))
    `(eshell-ls-directory ((t :foreground ,boss-base-med)))

@@ -57,10 +57,12 @@
         evil-visual-state-tag "Visual"
         evil-motion-state-tag "Motion"
         evil-emacs-state-tag  "Emacs"
-		evil-want-keybinding nil)
+	evil-want-keybinding nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
   (setq-default evil-cross-lines t)
+  ;; maybe there's a better way to do this:
+  ;; https://github.com/emacs-evil/evil/issues/622#issuecomment-598841628
   (evil-ex-define-cmd "q" 'kill-this-buffer)
   (evil-ex-define-cmd "wq" '(lambda () (interactive)
 			      (save-buffer)
@@ -137,15 +139,6 @@
   (w3m)
   (w3m-goto-url (concat "google.com/search?q=" query)))
 
-;; python
-(add-hook 'python-mode-hook
-  (lambda () (setq-local tab-width 4)
-	     (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
-(general-define-key
-  :states 'insert
-  :keymaps 'python-mode-map
-  "RET" 'newline-and-indent)
-
 ;; eshell
 (use-package eshell
   :init
@@ -172,11 +165,41 @@
 (use-package counsel
   :ensure t)
 
+;; magit
 (use-package evil-magit
   :ensure t)
+;; this is needed because q and wq are globally set in the evil config
+(defun magit-ex-cmd ()
+  (make-local-variable 'evil-ex-commands)
+  (setq evil-ex-commands
+	(mapcar (lambda (cmd) (cons (car cmd) (cdr cmd)))
+		(default-value 'evil-ex-commands)))
+  (evil-ex-define-cmd "q"  'with-editor-cancel)
+  (evil-ex-define-cmd "wq" '(lambda () (interactive)
+			      (save-buffer)
+			      (with-editor-finish))))
+(add-hook 'git-commit-mode-hook 'magit-ex-cmd)
 
 (use-package rainbow-delimiters
   :ensure t)
+
+;; python
+(add-hook 'python-mode-hook
+  (lambda () (setq-local tab-width 4)
+	     (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+(general-define-key
+  :states 'insert
+  :keymaps 'python-mode-map
+  "RET" 'newline-and-indent)
+
+;; markdown
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 ;; leader
 (general-define-key
