@@ -1,9 +1,10 @@
-;; TODO: evil-surround, evil-goggles, boss-theme inherit ivy colors from isearch
+;; TODO: magit, w3m tabs, copy of buffer, evil-surround, evil-goggles
+;; w3m filters: https://www.emacswiki.org/emacs/WThreeMFilters
 (require 'package)
 (setq package-enable-at-startup nil)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("melpa"     . "https://melpa.org/packages/")))
+(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
+                         ("gnu"   . "http://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -14,13 +15,11 @@
 (load-theme 'boss t)
 
 (setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror) 
+(load custom-file 'noerror)
 
 (setq inhibit-splash-screen t inhibit-startup-message t inhibit-startup-echo-area-message t
       make-backup-files nil auto-save-default nil help-window-select t
       ring-bell-function 'ignore
-      tab-width 4
-      tab-stop-list '(0 4 8)
       scroll-step 1 scroll-margin 5 show-paren-delay 0
       display-time-default-load-average nil
       frame-inhibit-implied-resize t
@@ -38,6 +37,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
 (defun print-type (var) (print (type-of var)))
+
 (use-package general
   :ensure t
   :config
@@ -57,7 +57,7 @@
         evil-visual-state-tag "Visual"
         evil-motion-state-tag "Motion"
         evil-emacs-state-tag  "Emacs"
-	evil-want-keybinding nil)
+		evil-want-keybinding nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
   (setq-default evil-cross-lines t)
@@ -75,16 +75,11 @@
    :states 'normal
    :prefix "SPC"
    "u" 'redo)
-  (general-define-key
-   :states 'insert
-   "TAB" 'tab-to-tab-stop)
   (evil-mode 1))
 
 (use-package evil-collection
   :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
+  :ensure t)
 
 (use-package exec-path-from-shell
   :ensure t
@@ -116,20 +111,23 @@
     :states 'normal
     "/" 'swiper))
 
+;; w3m
 (use-package w3m
   :ensure t
+  :after evil-collection
   :init
   (setq w3m-command (locate-file "w3m" exec-path)
         browse-url-browser-function 'w3m-browse-url
         w3m-session-crash-recovery nil
         w3m-use-cookies t
         w3m-use-tab nil)
-  (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t))
-
-;;(defun w3m-mode-settings ()
-;;  (evil-normal-state)
-;;  (local-set-key (kbd "RET") 'w3m-view-this-url))
-;;(add-hook 'w3m-mode-hook 'w3m-mode-settings)
+  (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
+  :config
+  (general-define-key
+   :states 'normal
+   :keymaps 'w3m-mode-map
+   "C-s" 'w3m-submit-form)
+  (evil-collection-init 'w3m))
 
 (defun google (query)
   (interactive "sgoogle: ")
@@ -139,22 +137,28 @@
   (w3m)
   (w3m-goto-url (concat "google.com/search?q=" query)))
 
-(use-package ein
-  :ensure t
+;; python
+(add-hook 'python-mode-hook
+  (lambda () (setq-local tab-width 4)
+	     (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+(general-define-key
+  :states 'insert
+  :keymaps 'python-mode-map
+  "RET" 'newline-and-indent)
+
+;; eshell
+(use-package eshell
   :init
-   (setq ein:jupyter-server-args '("--no-browser")))
-(general-define-key
-  :keymaps 'ein:notebook-mode-map
-   "RET" 'ein:worksheet-execute-cell-and-goto-next)
-(general-define-key
-  :states 'normal
-  :prefix "SPC"
-   "ea" 'ein:run
-   "et" 'ein:jupyter-server-stop
-   "ed" 'ein:dev-start-debug
-   "en" 'ein:notebooklist-new-notebook
-   "eo" 'ein:notebooklist-open-notebook
-   "el" 'ein:log-pop-to-all-buffer)
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+	      ;; local-set-key? update with general? But it complains about
+	      ;; the mode map being nil...
+              (define-key eshell-mode-map (kbd "TAB")
+                (lambda () (interactive) (pcomplete-std-complete)))
+	      (eshell/alias "vim" "find-file $1")
+              (add-to-list 'eshell-visual-commands "tail")
+              (add-to-list 'eshell-visual-commands "top")
+              (add-to-list 'eshell-visual-commands "htop"))))
 
 (use-package hlinum
   :ensure t
@@ -174,6 +178,7 @@
 (use-package rainbow-delimiters
   :ensure t)
 
+;; leader
 (general-define-key
   :states 'normal
   :keymaps 'override  ; For Dired
@@ -181,13 +186,16 @@
   "w"  'cg-window/body
   "o"  'evil-ex-nohighlight
   "g"  'google
+  "s"  'eshell
   "rd" 'rainbow-delimiters-mode)
 
+;; control
 (general-define-key
   :states '(normal insert motion)
   "C-b"   'ivy-switch-buffer
   "C-S-b" 'buffer-menu
   "C-f"   'counsel-find-file
+  "C-g"   'magit-status
   "C-h"   'evil-window-left
   "C-j"   'evil-window-down
   "C-k"   'evil-window-up
@@ -197,7 +205,7 @@
   :ensure t
   :config
   (general-define-key
-   :states 'normal 
+   :states 'normal
    :keymaps 'dired-mode-map
    "RET" 'dired-single-buffer
    "^" 'dired-single-up-directory))

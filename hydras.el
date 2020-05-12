@@ -5,13 +5,14 @@
 					 (call-interactively 'evil-window-right)))
   "
 ^Horizonal^
----------------------------------------------------
-_b_: buffer    _f_: file    _g_: google    _n_: none
-[_q_]: quit
+------------------------------------------------------
+_b_: buffer    _f_: file    _g_: google    _s_: eshell
+_n_: none     [_q_]: quit
 "
   ("b" ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
+  ("s" eshell)
   ("n" nil)
   ("q" delete-window))
 
@@ -22,13 +23,14 @@ _b_: buffer    _f_: file    _g_: google    _n_: none
 				       (call-interactively 'evil-window-down)))
   "
 ^Vertical^
-----------------------------------------------------
-_b_: buffer    _f_: file    _g_: google    _n_: none
-[_q_]: quit
+------------------------------------------------------
+_b_: buffer    _f_: file    _g_: google    _s_: eshell
+_n_: none     [_q_]: quit
 "
   ("b" ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
+  ("s" eshell)
   ("n" nil)
   ("q" delete-window))
 
@@ -58,12 +60,12 @@ _b_: balance
 
 (defhydra cg-window (:hint nil :foreign-keys warn :exit t :quit-key "q")
   "
-^Window^         ^Split^           ^Resize^   
+^Window^         ^Split^           ^Resize^
 ----------------------------------------------
 _n_: new         _s_: horizonal    _b_: buffer
 _l_: last        _v_: vertical     _t_: text
 _a_: list all    _k_: kill
-_K_: kill                         
+_K_: kill
 "
   ("a" elscreen-select-and-goto)
   ("l" elscreen-toggle)

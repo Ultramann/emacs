@@ -1,5 +1,6 @@
 ;; Set up, but not colors, taken from https://github.com/jonathanchu/atom-one-dark-theme.
-;; list-colors-display show all the current color options ;; list-faces-display shows colors for all current faces
+;; list-colors-display show all the current color options
+;; list-faces-display shows colors for all current faces
 ;; rainbow-mode highlights color words and definitions with the color
 ;; describe-face shows all information about face for word under point
 
@@ -23,11 +24,12 @@
     ("boss-purple"        . "#AA78DD")
     ("boss-purple-dark"   . "#875FFF")
     ("boss-purple-bright" . "#D700D7")
-    ("boss-green"         . "#61EF71")
-    ("boss-yellow"        . "#FFFF00")
-    ("boss-yellow-dark"   . "#D7AF00")
+    ("boss-green"         . "#00D787")
+    ("boss-green-bright"  . "#00FF5F")
+    ("boss-yellow"        . "#D7AF00")
+    ("boss-yellow-bright" . "#FFFF00")
     ("boss-red"           . "#AF5F5F")
-    ("boss-red-bright"    . "#D70000")
+    ("boss-red-bright"    . "#FF005F")
     ("boss-pink"          . "#FF00AF"))
   "List of Boss colors.")
 
@@ -44,7 +46,7 @@
   (custom-theme-set-faces
    'boss
    `(default ((t :foreground ,boss-fg :background ,boss-bg)))
-   `(success ((t :foreground ,boss-green)))
+   `(success ((t :foreground ,boss-green-bright)))
    `(warning ((t :foreground ,boss-red-bright)))
    `(error ((t :foreground ,boss-red :weight bold)))
    `(link ((t :foreground ,boss-blue :underline t :weight bold)))
@@ -62,12 +64,12 @@
    `(rainbow-delimiters-depth-1-face ((t :foreground ,boss-red)))
    `(rainbow-delimiters-depth-2-face ((t :foreground ,boss-purple-bright)))
    `(rainbow-delimiters-depth-3-face ((t :foreground ,boss-base-light)))
-   `(rainbow-delimiters-depth-4-face ((t :foreground ,boss-green)))
-   `(rainbow-delimiters-depth-5-face ((t :foreground ,boss-yellow)))
+   `(rainbow-delimiters-depth-4-face ((t :foreground ,boss-green-bright)))
+   `(rainbow-delimiters-depth-5-face ((t :foreground ,boss-yellow-bright)))
    `(rainbow-delimiters-depth-6-face ((t :foreground ,boss-red)))
    `(rainbow-delimiters-depth-7-face ((t :foreground ,boss-purple-bright)))
    `(rainbow-delimiters-depth-8-face ((t :foreground ,boss-base-light)))
-   `(rainbow-delimiters-depth-9-face ((t :foreground ,boss-green)))
+   `(rainbow-delimiters-depth-9-face ((t :foreground ,boss-green-bright)))
    `(rainbow-delimiters-unmached-face ((t :background ,boss-pink)))
    `(rainbow-delimiters-mismached-face ((t :background ,boss-pink)))
 
@@ -79,7 +81,7 @@
    `(font-lock-keyword-face ((t :foreground ,boss-red)))
    `(font-lock-preprocessor-face ((t :foreground ,boss-mono-med)))
    `(font-lock-string-face ((t :foreground ,boss-base-dark)))
-   `(font-lock-type-face ((t :foreground ,boss-yellow-dark)))
+   `(font-lock-type-face ((t :foreground ,boss-yellow)))
    `(font-lock-constant-face ((t :foreground ,boss-base-med)))
    `(font-lock-variable-name-face ((t :inherit default)))
    `(font-lock-warning-face ((t :foreground ,boss-mono-dark :bold t)))
@@ -108,9 +110,9 @@
    `(compilation-column-number ((t :foreground ,boss-mono-med)))
 
    ;; search
-   `(isearch ((t :foreground ,boss-bg :background ,boss-yellow)))
-   `(lazy-highlight ((t :foreground ,boss-yellow :background ,boss-bg)))
-   `(evil-ex-substitute-matches ((t :foreground ,boss-yellow :background ,boss-bg)))
+   `(isearch ((t :foreground ,boss-bg :background ,boss-yellow-bright)))
+   `(lazy-highlight ((t :foreground ,boss-yellow-bright :background ,boss-bg)))
+   `(evil-ex-substitute-matches ((t :foreground ,boss-yellow-bright :background ,boss-bg)))
    `(isearch-fail ((t :foreground ,boss-red-bright :background nil)))
 
    ;; dired-mode
@@ -126,22 +128,24 @@
    `(ivy-minibuffer-match-face-4 ((t :inherit isearch)))
 
    ;; git-commit
-   `(git-commit-comment-action  ((t :foreground ,boss-green :weight bold)))
+   `(git-commit-comment-action  ((t :foreground ,boss-green-bright :weight bold)))
    `(git-commit-comment-branch  ((t :foreground ,boss-blue :weight bold)))
    `(git-commit-comment-heading ((t :foreground ,boss-red-bright :weight bold)))
 
    ;; magit
-   `(magit-section-highlight ((t :background ,boss-bg-light)))
-   `(magit-section-heading ((t :foreground ,boss-red-bright :weight bold)))
-   `(magit-section-heading-selection ((t :foreground ,boss-fg :weight bold)))
+   `(magit-section-heading ((t :foreground ,boss-red :weight bold)))
    `(magit-diff-file-heading ((t :weight bold)))
-   `(magit-diff-file-heading-highlight ((t :background ,boss-mono-med :weight bold)))
-   `(magit-diff-file-heading-selection ((t :foreground ,boss-red-bright :background ,boss-bg-light :weight bold)))
-   `(magit-diff-hunk-heading ((t :foreground ,boss-mono-med :background ,boss-mono-med)))
-   `(magit-diff-hunk-heading-highlight ((t :foreground ,boss-mono-light :background ,boss-mono-dark)))
+   `(magit-diff-file-heading-highlight ((t :background ,boss-bg-light :weight bold)))
+   `(magit-diff-file-heading-selection ((t :foreground ,boss-red :background ,boss-bg-light :weight bold)))
+   `(magit-diff-added ((t :foreground ,boss-green)))
+   `(magit-diff-added-highlight ((t :foreground ,boss-green)))
+   `(magit-diff-removed ((t :foreground ,boss-red)))
+   `(magit-diff-removed-highlight ((t :foreground ,boss-red)))
+   `(magit-diff-hunk-heading ((t :background ,boss-bg-light :foreground ,boss-mono-light)))
+   `(magit-diff-hunk-heading-highlight ((t :foreground ,boss-bg :background ,boss-mono-light)))
    `(magit-diff-hunk-heading-selection ((t :foreground ,boss-purple :background ,boss-mono-dark)))
    `(magit-diff-context ((t :foreground ,boss-fg)))
-   `(magit-diff-context-highlight ((t :background ,boss-mono-dark :foreground ,boss-fg)))
+   `(magit-diff-context-highlight ((t :foreground ,boss-fg)))
    `(magit-diffstat-added ((t :foreground ,boss-green)))
    `(magit-diffstat-removed ((t :foreground ,boss-red)))
    `(magit-process-ok ((t :foreground ,boss-green)))
@@ -156,7 +160,7 @@
    `(magit-sequence-drop ((t :foreground ,boss-red)))
    `(magit-sequence-done ((t :foreground ,boss-mono-med)))
    `(magit-sequence-onto ((t :foreground ,boss-mono-med)))
-   `(magit-bisect-good ((t :foreground ,boss-green)))
+   `(magit-bisect-good ((t :foreground ,boss-green-bright)))
    `(magit-bisect-skip ((t :foreground ,boss-red)))
    `(magit-bisect-bad ((t :foreground ,boss-red)))
    `(magit-blame-heading ((t :background ,boss-mono-dark :foreground ,boss-mono-med)))
@@ -167,25 +171,25 @@
    `(magit-dimmed ((t :foreground ,boss-mono-med)))
    `(magit-hash ((t :foreground ,boss-purple)))
    `(magit-tag ((t :foreground ,boss-red :weight bold)))
-   `(magit-branch-remote ((t :foreground ,boss-green :weight bold)))
+   `(magit-branch-remote ((t :foreground ,boss-red :weight bold)))
    `(magit-branch-local ((t :foreground ,boss-blue :weight bold)))
    `(magit-branch-current ((t :foreground ,boss-blue :weight bold :box t)))
    `(magit-head ((t :foreground ,boss-blue :weight bold)))
    `(magit-refname ((t :background ,boss-bg :foreground ,boss-fg :weight bold)))
    `(magit-refname-stash ((t :background ,boss-bg :foreground ,boss-fg :weight bold)))
    `(magit-refname-wip ((t :background ,boss-bg :foreground ,boss-fg :weight bold)))
-   `(magit-signature-good ((t :foreground ,boss-green)))
+   `(magit-signature-good ((t :foreground ,boss-green-bright)))
    `(magit-signature-bad ((t :foreground ,boss-red)))
    `(magit-signature-untrusted ((t :foreground ,boss-red)))
    `(magit-cherry-unmatched  ((t :foreground ,boss-base-med)))
    `(magit-cherry-equivalent ((t :foreground ,boss-purple)))
-   `(magit-reflog-commit ((t :foreground ,boss-green)))
+   `(magit-reflog-commit ((t :foreground ,boss-green-bright)))
    `(magit-reflog-amend ((t :foreground ,boss-purple)))
-   `(magit-reflog-merge ((t :foreground ,boss-green)))
+   `(magit-reflog-merge ((t :foreground ,boss-green-bright)))
    `(magit-reflog-checkout ((t :foreground ,boss-blue)))
    `(magit-reflog-reset ((t :foreground ,boss-red)))
    `(magit-reflog-rebase ((t :foreground ,boss-purple)))
-   `(magit-reflog-cherry-pick ((t :foreground ,boss-green)))
+   `(magit-reflog-cherry-pick ((t :foreground ,boss-green-bright)))
    `(magit-reflog-remote ((t :foreground ,boss-base-med)))
    `(magit-reflog-other ((t :foreground ,boss-base-med)))
 
@@ -197,14 +201,14 @@
    `(term-color-black ((t :foreground ,boss-fg)))
    `(term-color-blue ((t :foreground ,boss-base-dark)))
    `(term-color-cyan ((t :foreground ,boss-base-med)))
-   `(term-color-green ((t :foreground ,boss-green)))
+   `(term-color-green ((t :foreground ,boss-green-bright)))
    `(term-color-magenta ((t :foreground ,boss-purple)))
    `(term-color-red ((t :foreground ,boss-red-bright)))
    `(term-color-white ((t :foreground ,boss-fg)))
    `(term-color-yellow ((t :foreground ,boss-red)))
 
    `(eshell-prompt ((t :foreground ,boss-base-dark)))
-   `(eshell-ls-executable ((t :foreground ,boss-green)))
+   `(eshell-ls-executable ((t :foreground ,boss-green-bright)))
    `(eshell-ls-directory ((t :foreground ,boss-base-med)))
    `(eshell-ls-archive ((t :foreground ,boss-fg)))
    `(eshell-ls-backup ((t :foreground ,boss-fg)))
@@ -222,11 +226,11 @@
    `(linum-highlight-face ((t :foreground ,boss-bg :background ,boss-mono-light)))
 
    ;; w3m
-   `(w3m-anchor ((t :foreground ,boss-base-dark)))
+   `(w3m-anchor ((t :foreground ,boss-base-med)))
    `(w3m-image-anchor ((t :foreground ,boss-mono-dark :background ,boss-bg)))
    `(w3m-arrived-anchor ((t :foreground ,boss-purple :background ,boss-bg)))
-   `(w3m-header-line-content ((t :foreground ,boss-base-med :background ,boss-bg-light)))
-   `(w3m-header-line-title ((t :foreground ,boss-base-light :background ,boss-bg-light)))
+   `(w3m-header-line-content ((t :foreground ,boss-base-light :background ,boss-bg-light)))
+   `(w3m-header-line-title ((t :foreground ,boss-yellow :background ,boss-bg-light)))
    ))
 
 
