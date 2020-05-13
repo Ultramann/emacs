@@ -133,11 +133,9 @@
 
 (defun google (query)
   (interactive "sgoogle: ")
-  (catch 'quit
-	(when (string= query "q")
-	      (throw 'quit nil)))
-  (w3m)
-  (w3m-goto-url (concat "google.com/search?q=" query)))
+  (unless (string= query "q")
+    (w3m)
+    (w3m-goto-url (concat "google.com/search?q=" query))))
 
 ;; eshell
 (use-package eshell
@@ -239,7 +237,7 @@
 	(when (equal (elscreen-get-screen-nickname (elscreen-get-current-screen))
 			"q")
 	      (progn (elscreen-kill)
-			(throw 'quit nil)))))
+		     (throw 'quit nil)))))
 
 (setq-default mode-line-format
   (list "    "
