@@ -238,6 +238,7 @@
   "C-S-b" 'buffer-menu
   "C-f"   'counsel-find-file
   "C-g"   'magit-status
+  "C-s"   'shell-command
   "C-h"   'evil-window-left
   "C-j"   'evil-window-down
   "C-k"   'evil-window-up
