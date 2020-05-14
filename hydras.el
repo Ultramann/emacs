@@ -5,14 +5,15 @@
 					 (call-interactively 'evil-window-right)))
   "
 ^Horizonal^
-------------------------------------------------------
-_b_: buffer    _f_: file    _g_: google    _s_: eshell
-_n_: none
+-----------------------------------------------------------
+_b_: buffer    _f_: file    _g_: google        _s_: eshell
+_n_: none                   _G_: google-tab
 [_<escape>_]: quit
 "
   ("b" ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
+  ("G" google-tab)
   ("s" eshell)
   ("n" nil)
   ("<escape>" delete-window :color teal))
@@ -25,13 +26,14 @@ _n_: none
   "
 ^Vertical^
 ------------------------------------------------------
-_b_: buffer    _f_: file    _g_: google    _s_: eshell
-_n_: none
+_b_: buffer    _f_: file    _g_: google        _s_: eshell
+_n_: none                   _G_: google-tab
 [_<escape>_]: quit
 "
   ("b" ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
+  ("G" google-tab)
   ("s" eshell)
   ("n" nil)
   ("<escape>" delete-window :color teal))

@@ -73,10 +73,6 @@
     [remap evil-next-line]     'evil-next-visual-line
     "C-v"                      'evil-visual-char
     "v"                        'evil-visual-block)
-  (general-define-key
-   :states 'normal
-   :prefix "SPC"
-   "u" 'redo)
   (evil-mode 1))
 
 (use-package evil-collection
@@ -130,10 +126,10 @@
   :ensure t
   :config
   (general-define-key
-   :states 'normal
-   :keymaps 'dired-mode-map
-   "RET" 'dired-single-buffer
-   "^" 'dired-single-up-directory))
+    :states 'normal
+    :keymaps 'dired-mode-map
+    "RET" 'dired-single-buffer
+    "^" 'dired-single-up-directory))
 
 (use-package hlinum
   :ensure t
@@ -160,9 +156,9 @@
   (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
   :config
   (general-define-key
-   :states 'normal
-   :keymaps 'w3m-mode-map
-   "C-s" 'w3m-submit-form)
+    :states 'normal
+    :keymaps 'w3m-mode-map
+    "C-s" 'w3m-submit-form)
   (evil-collection-init 'w3m))
 
 (defun google (query)
@@ -170,6 +166,12 @@
   (unless (string= query "q")
     (w3m)
     (w3m-goto-url (concat "google.com/search?q=" query))))
+
+(defun google-tab (query)
+  (interactive "sgoogle: ")
+  (unless (string= query "q")
+    (w3m)
+    (w3m-goto-url-new-session (concat "google.com/search?q=" query))))
 
 ;; eshell
 (use-package eshell
@@ -223,7 +225,9 @@
   :prefix "SPC"
   "w"  'cg-window/body
   "o"  'evil-ex-nohighlight
+  "u"  'redo
   "g"  'google
+  "G"  'google-tab
   "s"  'eshell
   "rd" 'rainbow-delimiters-mode)
 
