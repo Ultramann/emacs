@@ -83,6 +83,9 @@
   :after evil
   :ensure t)
 
+(use-package rainbow-delimiters
+  :ensure t)
+
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -101,6 +104,16 @@
   (elscreen-start)
   (elscreen-screen-nickname "misc"))
 
+(defun elscreen-create-rename ()
+  (interactive)
+  (elscreen-create)
+  (catch 'quit
+	(call-interactively 'elscreen-screen-nickname)
+	(when (equal (elscreen-get-screen-nickname (elscreen-get-current-screen))
+			"q")
+	      (progn (elscreen-kill)
+		     (throw 'quit nil)))))
+
 (use-package ivy
   :ensure t
   :config
@@ -112,6 +125,27 @@
   (general-define-key
     :states 'normal
     "/" 'swiper))
+
+(use-package dired-single
+  :ensure t
+  :config
+  (general-define-key
+   :states 'normal
+   :keymaps 'dired-mode-map
+   "RET" 'dired-single-buffer
+   "^" 'dired-single-up-directory))
+
+(use-package hlinum
+  :ensure t
+  :init
+  (setq linum-format " %d ")
+  (add-hook 'prog-mode-hook 'linum-mode)
+  (add-hook 'text-mode-hook 'linum-mode)
+  :config
+  (hlinum-activate))
+
+(use-package counsel
+  :ensure t)
 
 ;; w3m
 (use-package w3m
@@ -151,18 +185,6 @@
               (add-to-list 'eshell-visual-commands "top")
               (add-to-list 'eshell-visual-commands "htop"))))
 
-(use-package hlinum
-  :ensure t
-  :init
-  (setq linum-format " %d ")
-  (add-hook 'prog-mode-hook 'linum-mode)
-  (add-hook 'text-mode-hook 'linum-mode)
-  :config
-  (hlinum-activate))
-
-(use-package counsel
-  :ensure t)
-
 ;; magit
 (use-package evil-magit
   :ensure t)
@@ -175,9 +197,6 @@
   (evil-ex-define-cmd "q"  'with-editor-cancel)
   (evil-ex-define-cmd "wq" 'with-editor-finish))
 (add-hook 'git-commit-mode-hook 'magit-ex-cmd)
-
-(use-package rainbow-delimiters
-  :ensure t)
 
 ;; python
 (add-hook 'python-mode-hook
@@ -220,24 +239,10 @@
   "C-k"   'evil-window-up
   "C-l"   'evil-window-right)
 
-(use-package dired-single
-  :ensure t
-  :config
-  (general-define-key
-   :states 'normal
-   :keymaps 'dired-mode-map
-   "RET" 'dired-single-buffer
-   "^" 'dired-single-up-directory))
-
-(defun elscreen-create-rename ()
-  (interactive)
-  (elscreen-create)
-  (catch 'quit
-	(call-interactively 'elscreen-screen-nickname)
-	(when (equal (elscreen-get-screen-nickname (elscreen-get-current-screen))
-			"q")
-	      (progn (elscreen-kill)
-		     (throw 'quit nil)))))
+;; transient
+(general-define-key
+  :keymaps 'transient-base-map
+  "<escape>" 'transient-quit-one)
 
 (setq-default mode-line-format
   (list "    "
