@@ -113,11 +113,14 @@
 (use-package ivy
   :ensure t
   :config
-  (ivy-mode 1))
-
+  (ivy-mode 1)
+  (evil-collection-init 'ivy))
+;; TODO: take a look at how ivy and swiper work together
+;; esp re: escape exiting minibuffer from evil-collection init
 (use-package swiper
   :ensure t
   :config
+  (ivy-mode 1)
   (general-define-key
     :states 'normal
     "/" 'swiper))
@@ -129,7 +132,7 @@
     :states 'normal
     :keymaps 'dired-mode-map
     "RET" 'dired-single-buffer
-    "^" 'dired-single-up-directory))
+    "^"   'dired-single-up-directory))
 
 (use-package hlinum
   :ensure t
@@ -243,8 +246,7 @@
   "o"  'evil-ex-nohighlight
   "u"  'redo
   "g"  'google
-  "G"  'google-tab
-  "d" 'rainbow-delimiters-mode)
+  "G"  'google-tab)
 
 ;; control
 (general-define-key

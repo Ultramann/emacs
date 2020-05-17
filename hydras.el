@@ -1,3 +1,5 @@
+;;^ are a special no width character to help visual spacing in definitions
+
 ;; Window
 (defhydra split-horizontal (:hint nil
 			    :foreign-keys warn
@@ -5,8 +7,8 @@
 			    :post (progn (split-window-right)
 					 (call-interactively 'evil-window-right)))
   "
-^Horizonal^
-------------------------------------------
+^Horizonal
+^-^------------^-^----------------^-^--------
 _b_: buffer    _g_: google        _s_: eshell
 _f_: file      _G_: google-tab    _n_: none
 [_<escape>_]: quit
@@ -25,8 +27,8 @@ _f_: file      _G_: google-tab    _n_: none
 			  :post (progn (split-window-below)
 				       (call-interactively 'evil-window-down)))
   "
-^Vertical^
-------------------------------------------------------
+^Vertical
+^-^------------^-^----------------^-^--------
 _b_: buffer    _g_: google        _s_: eshell
 _f_: file      _G_: google-tab    _n_: none
 [_<escape>_]: quit
@@ -41,20 +43,20 @@ _f_: file      _G_: google-tab    _n_: none
 
 (defhydra text-resize (:hint nil :foreign-keys warn :quit-key "<escape>")
   "
-^Resize Text^
----------------------------
+^Resize Text
+^-^------------^-^---------
 _=_: bigger    _-_: smaller
 "
   ("=" text-scale-increase)
   ("-" text-scale-decrease)
   ("<escape>" nil "quit"))
 
-(defhydra buffer-resize (:hint nil
+(defhydra split-resize (:hint nil
 			 :foreign-keys warn
 			 :quit-key "<escape>")
   "
-^Resize Buffer^
-----------------------------------------------------------
+^Resize Split
+^-^------------^-^-------------^-^------------^-^---------
 _l_: wider    _h_: narrower    _k_: taller    _j_: shorter
 _b_: balance
 "
@@ -67,28 +69,31 @@ _b_: balance
 
 (defhydra cg-window (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Window^         ^Split^           ^Resize^
-----------------------------------------------
-_n_: new         _s_: horizonal    _b_: buffer
-_l_: last        _v_: vertical     _t_: text
-_a_: list all    _k_: kill
-_K_: kill
+^Window^         ^Split^            ^Text^        
+^-^--------------^-^----------------^--^--------------------
+_n_: new          _s_: horizonal    _rd_: rainbow delimiters
+_l_: last         _v_: vertical     _rt_: resize text
+_;_: list all     _k_: kill
+_K_: kill        _rs_: resize
 "
-  ("a" elscreen-select-and-goto)
-  ("l" elscreen-toggle)
-  ("n" elscreen-create-rename)
-  ("K" elscreen-kill)
-  ("s" split-horizontal/body)
-  ("v" split-vertical/body)
-  ("k" delete-window)
-  ("b" buffer-resize/body)
-  ("t" text-resize/body)
+  ("n"  elscreen-create-rename)
+  ("l"  elscreen-toggle)
+  (";"  elscreen-select-and-goto)
+  ("K"  elscreen-kill)
+  ("s"  split-horizontal/body)
+  ("v"  split-vertical/body)
+  ("k"  delete-window)
+  ("rs" split-resize/body)
+  ("rt" text-resize/body)
+  ("rd" rainbow-delimiters-mode)
+
   ("<escape>" nil "quit"))
 
+;; Run
 (defhydra docker-compose (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Docker Compose^
-----------------------------------
+^Docker Compose
+^-^-----------^-^--------^-^------
 _b_: build    _u_: up    _d_: down
 "
   ("b" docker-compose-build)
@@ -98,8 +103,8 @@ _b_: build    _u_: up    _d_: down
 
 (defhydra docker (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Docker^
---------------------------------------
+^Docker
+^-^-----------^-^---------^-^---------
 _b_: build    _r_: run    _c_: compose
 "
   ("b" docker-build)
@@ -109,8 +114,8 @@ _b_: build    _r_: run    _c_: compose
 
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Run^
--------------------------------------------
+^Run
+^-^------------^-^--------------^-^--------
 _e_: eshell    _t_: terminal    _d_: docker
 "
   ("t" (lambda () (interactive) (ansi-term "/bin/bash")))
