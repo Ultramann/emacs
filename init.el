@@ -187,6 +187,17 @@
               (add-to-list 'eshell-visual-commands "top")
               (add-to-list 'eshell-visual-commands "htop"))))
 
+;; terminal
+(general-define-key
+  :states  'insert
+  :keymaps 'term-raw-map
+   "<backtab>" 'term-send-raw
+   "C-r"       'term-send-raw
+   "C-a"       'term-send-raw
+   "C-e"       'term-send-raw
+   "C-c"       'term-send-raw
+   "s-v"       'term-paste)
+
 ;; magit
 (use-package evil-magit
   :ensure t)
@@ -199,6 +210,10 @@
   (evil-ex-define-cmd "q"  'with-editor-cancel)
   (evil-ex-define-cmd "wq" 'with-editor-finish))
 (add-hook 'git-commit-mode-hook 'magit-ex-cmd)
+
+;; docker
+(use-package docker
+  :ensure t)
 
 ;; python
 (add-hook 'python-mode-hook
@@ -224,12 +239,12 @@
   :keymaps 'override  ; For Dired
   :prefix "SPC"
   "w"  'cg-window/body
+  "r"  'cg-run/body
   "o"  'evil-ex-nohighlight
   "u"  'redo
   "g"  'google
   "G"  'google-tab
-  "s"  'eshell
-  "rd" 'rainbow-delimiters-mode)
+  "d" 'rainbow-delimiters-mode)
 
 ;; control
 (general-define-key

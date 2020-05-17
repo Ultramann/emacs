@@ -1,3 +1,4 @@
+;; Window
 (defhydra split-horizontal (:hint nil
 			    :foreign-keys warn
 			    :exit t
@@ -5,9 +6,9 @@
 					 (call-interactively 'evil-window-right)))
   "
 ^Horizonal^
------------------------------------------------------------
-_b_: buffer    _f_: file    _g_: google        _s_: eshell
-_n_: none                   _G_: google-tab
+------------------------------------------
+_b_: buffer    _g_: google        _s_: eshell
+_f_: file      _G_: google-tab    _n_: none
 [_<escape>_]: quit
 "
   ("b" ivy-switch-buffer)
@@ -26,8 +27,8 @@ _n_: none                   _G_: google-tab
   "
 ^Vertical^
 ------------------------------------------------------
-_b_: buffer    _f_: file    _g_: google        _s_: eshell
-_n_: none                   _G_: google-tab
+_b_: buffer    _g_: google        _s_: eshell
+_f_: file      _G_: google-tab    _n_: none
 [_<escape>_]: quit
 "
   ("b" ivy-switch-buffer)
@@ -82,4 +83,37 @@ _K_: kill
   ("k" delete-window)
   ("b" buffer-resize/body)
   ("t" text-resize/body)
+  ("<escape>" nil "quit"))
+
+(defhydra docker-compose (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
+  "
+^Docker Compose^
+----------------------------------
+_b_: build    _u_: up    _d_: down
+"
+  ("b" docker-compose-build)
+  ("u" docker-compose-up)
+  ("d" docker-compose-down)
+  ("<escape>" nil "quit"))
+
+(defhydra docker (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
+  "
+^Docker^
+--------------------------------------
+_b_: build    _r_: run    _c_: compose
+"
+  ("b" docker-build)
+  ("r" docker-run)
+  ("c" docker-compose/body)
+  ("<escape>" nil "quit"))
+
+(defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
+  "
+^Run^
+-------------------------------------------
+_e_: eshell    _t_: terminal    _d_: docker
+"
+  ("t" (lambda () (interactive) (ansi-term "/bin/bash")))
+  ("e" eshell)
+  ("d" docker/body)
   ("<escape>" nil "quit"))
