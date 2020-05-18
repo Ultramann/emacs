@@ -1,8 +1,8 @@
 ;; Set up, but not colors, taken from https://github.com/jonathanchu/atom-one-dark-theme.
 ;; list-colors-display show all the current color options
-;; list-faces-display shows colors for all current faces
+;; list-faces-display (counsel-faces) shows colors for all current faces
 ;; rainbow-mode highlights color words and definitions with the color
-;; describe-face shows all information about face for word under point
+;; (counsel-)describe-face shows all information about face for word under point
 
 (deftheme boss
   "Boss color theme, created by Cary Goltermann")

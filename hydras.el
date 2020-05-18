@@ -90,35 +90,13 @@ _K_: kill        _rs_: resize
   ("<escape>" nil "quit"))
 
 ;; Run
-(defhydra docker-compose (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
-  "
-^Docker Compose
-^-^-----------^-^--------^-^------
-_b_: build    _u_: up    _d_: down
-"
-  ("b" docker-compose-build)
-  ("u" docker-compose-up)
-  ("d" docker-compose-down)
-  ("<escape>" nil "quit"))
-
-(defhydra docker (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
-  "
-^Docker
-^-^-----------^-^---------^-^---------
-_b_: build    _r_: run    _c_: compose
-"
-  ("b" docker-build)
-  ("r" docker-run)
-  ("c" docker-compose/body)
-  ("<escape>" nil "quit"))
-
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
 ^Run
-^-^------------^-^--------------^-^--------
-_e_: eshell    _t_: terminal    _d_: docker
+^-^------------^-^--------------^-^----------------
+_e_: eshell    _t_: terminal    _d_: docker-compose
 "
-  ("t" (lambda () (interactive) (ansi-term "/bin/bash")))
+  ("t" (lambda () (interactive) (ansi-term "/bin/bash") (rename-buffer "*term*")))
   ("e" eshell)
-  ("d" docker/body)
+  ("d" cg-docker-compose-up)
   ("<escape>" nil "quit"))

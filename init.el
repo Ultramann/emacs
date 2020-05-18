@@ -48,6 +48,14 @@
   :config
   (load "~/.emacs.d/hydras.el"))
 
+(use-package transient
+  ;; simple examples of transient: https://github.com/Silex/docker.el
+  :ensure t
+  :config
+  (general-define-key
+    :keymaps 'transient-base-map
+    "<escape>" 'transient-quit-one))
+
 (use-package evil
   :ensure t
   :demand t
@@ -88,15 +96,12 @@
   (exec-path-from-shell-copy-env "PATH"))
 
 (use-package elscreen
+  ;; see if can replace with eyebrowse
   :ensure t
   :init
   (global-unset-key (kbd "C-s"))
   (setq elscreen-display-tab nil)
   :config
-  (use-package elscreen-separate-buffer-list
-    :ensure t
-    :config
-    (elscreen-separate-buffer-list-mode))
   (elscreen-start)
   (elscreen-screen-nickname "misc"))
 
@@ -120,10 +125,7 @@
 (use-package swiper
   :ensure t
   :config
-  (ivy-mode 1)
-  (general-define-key
-    :states 'normal
-    "/" 'swiper))
+  (ivy-mode 1))
 
 (use-package dired-single
   :ensure t
@@ -146,7 +148,7 @@
 (use-package counsel
   :ensure t)
 
-;; w3m
+; w3m
 (use-package w3m
   :ensure t
   :after evil-collection
@@ -201,7 +203,14 @@
    "C-c"       'term-send-raw
    "s-v"       'term-paste)
 
-;; magit
+(defun term-mode-settings ()
+  "Kill terminal w/o prompt"
+  (let ((proc (get-buffer-process (current-buffer))))
+    (when (processp proc)
+      (set-process-query-on-exit-flag proc nil))))
+(add-hook 'term-mode-hook 'term-mode-settings)
+
+; magit
 (use-package evil-magit
   :ensure t)
 ;; this is needed because q and wq are globally set in the evil config
@@ -217,6 +226,21 @@
 ;; docker
 (use-package docker
   :ensure t)
+(define-transient-command cg-docker-compose-up ()
+  "Transient for \"docker-compose up\"."
+  :man-page "docker-compose up"
+  :value '("--build")
+  ["Arguments"
+   ("-b" "Build" "--build")
+   ("-c" "Scale" "--scale " transient-read-number-N0)
+   ("-d" "Detach" "-d")
+   ("-f" "Force recreate" "--force-recreate")
+   ("-n" "No deps" "--no-deps")
+   ("-r" "Remove orphans" "--remove-orphans")
+   ("-t" "Timeout" "--timeout " transient-read-number-N0)]
+  ["Actions"
+   ("u" "All services" docker-compose-run-action-for-all-services)
+   ("U" "Up" docker-compose-run-action-for-one-service)])
 
 ;; python
 (add-hook 'python-mode-hook
@@ -241,6 +265,7 @@
   :states 'normal
   :keymaps 'override  ; For Dired
   :prefix "SPC"
+  "/"  'swiper
   "w"  'cg-window/body
   "r"  'cg-run/body
   "o"  'evil-ex-nohighlight
@@ -256,15 +281,11 @@
   "C-f"   'counsel-find-file
   "C-g"   'magit-status
   "C-s"   'shell-command
+  "C-a"   'async-shell-command
   "C-h"   'evil-window-left
   "C-j"   'evil-window-down
   "C-k"   'evil-window-up
   "C-l"   'evil-window-right)
-
-;; transient
-(general-define-key
-  :keymaps 'transient-base-map
-  "<escape>" 'transient-quit-one)
 
 (setq-default mode-line-format
   (list "    "
