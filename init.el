@@ -212,7 +212,13 @@
 
 ; magit
 (use-package evil-magit
-  :ensure t)
+  :ensure t
+  :config
+  (general-define-key
+   :states 'motion
+   :keymaps 'magit-diff-mode-map
+   "J" 'magit-section-forward
+   "K" 'magit-section-backward))
 ;; this is needed because q and wq are globally set in the evil config
 (defun magit-ex-cmd ()
   (make-local-variable 'evil-ex-commands)
@@ -276,6 +282,7 @@
 ;; control
 (general-define-key
   :states '(normal insert motion)
+  :keymaps 'override
   "C-b"   'ivy-switch-buffer
   "C-S-b" 'buffer-menu
   "C-f"   'counsel-find-file
