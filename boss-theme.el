@@ -106,9 +106,10 @@
 
    ;; search
    `(isearch ((t :foreground ,boss-bg :background ,boss-yellow-bright)))
+   `(isearch-fail ((t :foreground ,boss-red-bright :background nil)))
    `(lazy-highlight ((t :foreground ,boss-yellow-bright :background ,boss-bg)))
    `(evil-ex-substitute-matches ((t :foreground ,boss-yellow-bright :background ,boss-bg)))
-   `(isearch-fail ((t :foreground ,boss-red-bright :background nil)))
+   `(match ((t :foreground ,boss-yellow-bright :background ,boss-bg :underline t)))
 
    ;; dired-mode
    '(dired-directory ((t :inherit font-lock-keyword-face)))
@@ -122,6 +123,11 @@
    `(ivy-minibuffer-match-face-3 ((t :inherit isearch)))
    `(ivy-minibuffer-match-face-4 ((t :inherit isearch)))
 
+   ;;headers
+   `(diff-file-header ((t :background ,boss-bg-light)))
+   `(header-line ((t :background ,boss-bg)))
+   `(magit-header-line ((t :foreground ,boss-blue-dark)))
+
    ;; git-commit
    `(git-commit-comment-action  ((t :foreground ,boss-green :weight bold)))
    `(git-commit-comment-branch  ((t :foreground ,boss-blue-med :weight bold)))
@@ -129,6 +135,7 @@
 
    ;; magit
    `(magit-section-heading ((t :foreground ,boss-red :weight bold)))
+   `(magit-diff-revision-summary-highlight ((t :foreground ,boss-red :weight bold)))
    `(magit-diff-file-heading ((t :weight bold)))
    `(magit-diff-file-heading-highlight ((t :background ,boss-bg-light :weight bold)))
    `(magit-diff-file-heading-selection ((t :foreground ,boss-red :background ,boss-bg-light :weight bold)))
