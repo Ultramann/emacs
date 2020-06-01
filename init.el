@@ -215,7 +215,7 @@
   :ensure t
   :config
   (general-define-key
-   :states 'motion
+   :states 'normal
    :keymaps 'magit-diff-mode-map
    "J" 'magit-section-forward
    "K" 'magit-section-backward))
