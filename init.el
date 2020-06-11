@@ -115,6 +115,13 @@
 	      (progn (elscreen-kill)
 		     (throw 'quit nil)))))
 
+(defun toggle-window-fullscreen ()
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+      (progn (window-configuration-to-register '_)
+  	     (delete-other-windows))))
+
 (use-package ivy
   :ensure t
   :config
@@ -163,7 +170,7 @@
   (general-define-key
     :states 'normal
     :keymaps 'w3m-mode-map
-    "C-s" 'w3m-submit-form)
+    "s" 'w3m-submit-form)
   (evil-collection-init 'w3m))
 
 (defun google (query)
@@ -271,28 +278,27 @@
   :states 'normal
   :keymaps 'override  ; For Dired
   :prefix "SPC"
-  "/"  'swiper
-  "w"  'cg-window/body
-  "r"  'cg-run/body
-  "o"  'evil-ex-nohighlight
-  "u"  'redo
-  "g"  'google
-  "G"  'google-tab)
+  "/" 'swiper
+  "w" 'cg-window/body
+  "r" 'cg-run/body
+  "o" 'evil-ex-nohighlight
+  "u" 'redo
+  "g" 'google
+  "G" 'google-tab)
 
 ;; control
 (general-define-key
   :states '(normal insert motion)
   :keymaps 'override
-  "C-b"   'ivy-switch-buffer
-  "C-S-b" 'buffer-menu
-  "C-f"   'counsel-find-file
-  "C-g"   'magit-status
-  "C-s"   'shell-command
-  "C-a"   'async-shell-command
-  "C-h"   'evil-window-left
-  "C-j"   'evil-window-down
-  "C-k"   'evil-window-up
-  "C-l"   'evil-window-right)
+  "C-b" 'ivy-switch-buffer
+  "C-f" 'counsel-find-file
+  "C-g" 'magit-status
+  "C-s" 'shell-command
+  "C-a" 'async-shell-command
+  "C-h" 'evil-window-left
+  "C-j" 'evil-window-down
+  "C-k" 'evil-window-up
+  "C-l" 'evil-window-right)
 
 (setq-default mode-line-format
   (list "    "

@@ -74,7 +74,8 @@ _b_: balance
 _n_: new          _s_: horizonal    _rd_: rainbow delimiters
 _l_: last         _v_: vertical     _rt_: resize text
 _;_: list all     _k_: kill
-_K_: kill        _rs_: resize
+_K_: kill         _f_: fullsceen 
+                 _rs_: resize
 "
   ("n"  elscreen-create-rename)
   ("l"  elscreen-toggle)
@@ -83,6 +84,7 @@ _K_: kill        _rs_: resize
   ("s"  split-horizontal/body)
   ("v"  split-vertical/body)
   ("k"  delete-window)
+  ("f"  toggle-window-fullscreen)
   ("rs" split-resize/body)
   ("rt" text-resize/body)
   ("rd" rainbow-delimiters-mode)
