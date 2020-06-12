@@ -127,6 +127,17 @@
   (general-define-key
     :states 'normal
     :keymaps 'dired-mode-map
+    "o"   'dired-find-file-other-window
+    "m"   'dired-mark
+    "d"   'dired-flag-file-deletion
+    "x"   'dired-do-flagged-delete
+    "u"   'dired-unmark
+    "g"   'dired-do-find-regexp
+    "s"   'dired-do-find-regexp-and-replace
+    "C"   'dired-do-copy
+    "R"   'dired-do-rename
+    "T"   'dired-do-touch
+    "DEL" 'dired-unmark-backward
     "RET" 'dired-single-buffer
     "^"   'dired-single-up-directory))
 

@@ -114,7 +114,8 @@
    ;; dired-mode
    '(dired-directory ((t :inherit font-lock-keyword-face)))
    '(dired-flagged ((t :inherit diff-hl-delete)))
-   '(dired-symlink ((t :foreground "#FD5FF1")))
+   `(dired-marked ((t :foreground ,boss-purple)))
+   `(dired-symlink ((t :foreground ,boss-green)))
 
    ;; ivy
    `(ivy-current-match ((t :foreground ,boss-blue-dark :weight bold)))
