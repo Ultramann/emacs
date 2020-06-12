@@ -71,16 +71,16 @@ _b_: balance
   "
 ^Window^         ^Split^            ^Text^        
 ^-^--------------^-^----------------^--^--------------------
-_n_: new          _s_: horizonal    _rd_: rainbow delimiters
+_w_: switch       _s_: horizonal    _rd_: rainbow delimiters
 _l_: last         _v_: vertical     _rt_: resize text
-_;_: list all     _k_: kill
+_R_: rename       _k_: kill
 _K_: kill         _f_: fullsceen 
-                 _rs_: resize
+^^               _rs_: resize
 "
-  ("n"  elscreen-create-rename)
-  ("l"  elscreen-toggle)
-  (";"  elscreen-select-and-goto)
-  ("K"  elscreen-kill)
+  ("w"  persp-switch)
+  ("l"  persp-switch-last)
+  ("R"  persp-rename)
+  ("K"  persp-kill)
   ("s"  split-horizontal/body)
   ("v"  split-vertical/body)
   ("k"  delete-window)

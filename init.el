@@ -23,8 +23,7 @@
       scroll-step 1 scroll-margin 5 show-paren-delay 0
       display-time-default-load-average nil
       frame-inhibit-implied-resize t
-      display-time-string-forms '((propertize (format-time-string "   %l:%M %p" now)
-                                              'face 'bold)))
+      display-time-string-forms '((format-time-string "%l:%M %p" now)))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -95,25 +94,13 @@
   :config
   (exec-path-from-shell-copy-env "PATH"))
 
-(use-package elscreen
-  ;; see if can replace with eyebrowse
+(use-package perspective
   :ensure t
   :init
-  (global-unset-key (kbd "C-s"))
-  (setq elscreen-display-tab nil)
+  (setq persp-initial-frame-name "misc"
+	persp-show-modestring nil)
   :config
-  (elscreen-start)
-  (elscreen-screen-nickname "misc"))
-
-(defun elscreen-create-rename ()
-  (interactive)
-  (elscreen-create)
-  (catch 'quit
-	(call-interactively 'elscreen-screen-nickname)
-	(when (equal (elscreen-get-screen-nickname (elscreen-get-current-screen))
-			"q")
-	      (progn (elscreen-kill)
-		     (throw 'quit nil)))))
+  (persp-mode))
 
 (defun toggle-window-fullscreen ()
   (interactive)
@@ -290,7 +277,7 @@
 (general-define-key
   :states '(normal insert motion)
   :keymaps 'override
-  "C-b" 'ivy-switch-buffer
+  "C-b" 'persp-ivy-switch-buffer ;'ivy-switch-buffer
   "C-f" 'counsel-find-file
   "C-g" 'magit-status
   "C-s" 'shell-command
@@ -300,27 +287,31 @@
   "C-k" 'evil-window-up
   "C-l" 'evil-window-right)
 
+(defun remove-git (git-string)
+  (replace-regexp-in-string " Git:" "" git-string))
+
 (setq-default mode-line-format
-  (list "    "
-		'(:eval (propertize
-                  (concat "[" (elscreen-get-screen-nickname
-                                   (elscreen-get-current-screen)) "]")
-                  'face 'bold))
-        "    %e"
+  (list "   "
+	'(:eval (propertize (concat "[" (persp-current-name) "]") 'face 'bold))
+        "   %e"
         '(:eval (abbreviate-file-name
-                  (file-name-nondirectory
-                    (directory-file-name default-directory))))
-        "    "
-		'(:eval (when (bound-and-true-p linum-mode)
-				  (cond ((buffer-modified-p) "[+] ")
-						(buffer-read-only "[x] "))))
-        '(:eval mode-line-buffer-identification 'face 'bold)
-		"    "
-        '(:eval (if (bound-and-true-p linum-mode)
-			"Line: %l Col: %c"
-		    "-"))
-		"   "
-		'(:eval (if vc-mode vc-mode " -"))
-		mode-line-misc-info))
+                 (file-name-nondirectory
+                  (directory-file-name default-directory))))
+        "   "
+	'(:eval (propertize
+		 (when (bound-and-true-p linum-mode)
+		       (cond ((buffer-modified-p) "[+] ")
+			      (buffer-read-only "[x] ")))
+		'face 'bold))
+        '(:eval (propertize (buffer-name) 'face 'bold))
+ 	"   "
+        '(:eval (when (bound-and-true-p linum-mode)
+			"L-%l C-%c   "))
+	'(:eval (propertize (if vc-mode
+				(remove-git vc-mode)
+			        "-")
+			    'face 'bold))
+	"  "
+	mode-line-misc-info))
 
 (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
