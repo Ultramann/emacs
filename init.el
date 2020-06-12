@@ -298,8 +298,8 @@
   "C-k" 'evil-window-up
   "C-l" 'evil-window-right)
 
-(defun remove-git (git-string)
-  (replace-regexp-in-string " Git:" "" git-string))
+(defun remove-git (branch-string)
+   (replace-regexp-in-string " Git\\(:\\|-\\)" "" branch-string))
 
 (setq-default mode-line-format
   (list "   "
