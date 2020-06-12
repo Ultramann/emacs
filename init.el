@@ -288,7 +288,7 @@
 (general-define-key
   :states '(normal insert motion)
   :keymaps 'override
-  "C-b" 'persp-ivy-switch-buffer ;'ivy-switch-buffer
+  "C-b" 'persp-ivy-switch-buffer
   "C-f" 'counsel-find-file
   "C-g" 'magit-status
   "C-s" 'shell-command

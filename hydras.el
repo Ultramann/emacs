@@ -13,7 +13,7 @@ _b_: buffer    _g_: google        _s_: eshell
 _f_: file      _G_: google-tab    _n_: none
 [_<escape>_]: quit
 "
-  ("b" ivy-switch-buffer)
+  ("b" persp-ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
   ("G" google-tab)
@@ -33,7 +33,7 @@ _b_: buffer    _g_: google        _s_: eshell
 _f_: file      _G_: google-tab    _n_: none
 [_<escape>_]: quit
 "
-  ("b" ivy-switch-buffer)
+  ("b" persp-ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
   ("G" google-tab)
@@ -69,12 +69,12 @@ _b_: balance
 
 (defhydra cg-window (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Window^         ^Split^            ^Text^        
+^Window^         ^Split^            ^Text^
 ^-^--------------^-^----------------^--^--------------------
 _w_: switch       _s_: horizonal    _rd_: rainbow delimiters
 _l_: last         _v_: vertical     _rt_: resize text
 _R_: rename       _k_: kill
-_K_: kill         _f_: fullsceen 
+_K_: kill         _f_: fullscreen
 ^^               _rs_: resize
 "
   ("w"  persp-switch)
