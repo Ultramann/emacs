@@ -121,6 +121,7 @@
   :config
   (ivy-mode 1))
 
+; dired
 (use-package dired-single
   :ensure t
   :config

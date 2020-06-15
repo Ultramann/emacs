@@ -57,7 +57,7 @@
    `(vertical-border ((t :foreground ,boss-mono-dark)))
    `(secondary-selection ((t :background ,boss-mono-dark)))
    `(trailing-whitespace ((t :foreground ,boss-red-bright :underline t)))
-   
+
    `(query-replace ((t :inherit isearch)))
    `(minibuffer-prompt ((t :foreground ,boss-mono-light)))
    `(show-paren-mismatch ((t :background ,boss-pink)))
