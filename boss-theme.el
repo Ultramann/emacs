@@ -8,8 +8,7 @@
   "Boss color theme, created by Cary Goltermann")
 
 (defvar boss-colors-alist
-  '(("boss-cursor"        . "#303030")
-    ("boss-fg"            . "#C6C6C6")
+  '(("boss-fg"            . "#C6C6C6")
     ("boss-bg"            . "#000000")
     ("boss-bg-shadow"     . "#1C1C1C")
     ("boss-bg-light"      . "#262626")
@@ -50,7 +49,7 @@
    `(error ((t :foreground ,boss-red :weight bold)))
    `(link ((t :foreground ,boss-blue-med :underline t :weight bold)))
    `(link-visited ((t :foreground ,boss-blue-med :underline t :weight normal)))
-   `(cursor ((t :background ,boss-cursor)))
+   `(cursor ((t :background ,boss-fg)))
    `(fringe ((t :background ,boss-bg)))
    `(region ((t :background ,boss-bg-highlight)))
    `(highlight ((t :background ,boss-bg-highlight)))
