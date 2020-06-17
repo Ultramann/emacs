@@ -18,11 +18,9 @@
 (load custom-file 'noerror)
 
 (setq inhibit-splash-screen t inhibit-startup-message t inhibit-startup-echo-area-message t
-      make-backup-files nil auto-save-default nil help-window-select t
-      ring-bell-function 'ignore
-      scroll-step 1 scroll-margin 5 show-paren-delay 0
-      display-time-default-load-average nil
-      frame-inhibit-implied-resize t
+      make-backup-files nil auto-save-default nil help-window-select t create-lockfiles nil
+      ring-bell-function 'ignore scroll-step 1 scroll-margin 5 show-paren-delay 0
+      display-time-default-load-average nil frame-inhibit-implied-resize t
       display-time-string-forms '((format-time-string "%l:%M %p" now)))
 
 (menu-bar-mode -1)
@@ -121,7 +119,7 @@
   :config
   (ivy-mode 1))
 
-; dired
+;; dired
 (use-package dired-single
   :ensure t
   :config
@@ -156,7 +154,7 @@
 (use-package counsel
   :ensure t)
 
-; w3m
+;; w3m
 (use-package w3m
   :ensure t
   :after evil-collection
@@ -174,6 +172,9 @@
     "s" 'w3m-submit-form)
   (evil-collection-init 'w3m))
 
+;; Make these two function higher order taking
+;; 'w3m-goto-url(-new-session) as an argument. Not sure if this
+;; how hard this will be with the interactive parameter
 (defun google (query)
   (interactive "sgoogle: ")
   (unless (string= query "q")
@@ -218,7 +219,7 @@
       (set-process-query-on-exit-flag proc nil))))
 (add-hook 'term-mode-hook 'term-mode-settings)
 
-; magit
+;; magit
 (use-package evil-magit
   :ensure t
   :config
@@ -226,7 +227,13 @@
    :states 'normal
    :keymaps 'magit-diff-mode-map
    "J" 'magit-section-forward
-   "K" 'magit-section-backward))
+   "K" 'magit-section-backward)
+  (general-define-key
+   :states 'normal
+   :keymaps 'magit-status-mode-map
+   "J" 'magit-section-forward
+   "K" 'magit-section-backward)
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 ;; this is needed because q and wq are globally set in the evil config
 (defun magit-ex-cmd ()
   (make-local-variable 'evil-ex-commands)
@@ -296,11 +303,13 @@
   "C-g" 'magit-status
   "C-s" 'shell-command
   "C-a" 'async-shell-command
+  "C-u" 'evil-scroll-up
   "C-h" 'evil-window-left
   "C-j" 'evil-window-down
   "C-k" 'evil-window-up
   "C-l" 'evil-window-right)
 
+;; modeline
 (defun remove-git (branch-string)
    (replace-regexp-in-string " Git\\(:\\|-\\)" "" branch-string))
 
@@ -320,7 +329,7 @@
         '(:eval (propertize (buffer-name) 'face 'bold))
  	"   "
         '(:eval (when (bound-and-true-p linum-mode)
-			"L-%l C-%c   "))
+			"-%l|%c   "))
 	'(:eval (propertize (if vc-mode
 				(remove-git vc-mode)
 			        "-")
