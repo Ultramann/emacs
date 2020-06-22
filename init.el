@@ -243,6 +243,12 @@
   (evil-ex-define-cmd "q"  'with-editor-cancel)
   (evil-ex-define-cmd "wq" 'with-editor-finish))
 (add-hook 'git-commit-mode-hook 'magit-ex-cmd)
+;; from doom-emacs
+(defun magit-update-vc () 
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (vc-refresh-state))))
+(add-hook 'magit-post-refresh-hook #'magit-update-vc)
 
 ;; docker
 (use-package docker
