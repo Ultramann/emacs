@@ -118,10 +118,10 @@
 
    ;; ivy
    `(ivy-current-match ((t :foreground ,boss-blue-dark :weight bold)))
-   `(ivy-minibuffer-match-face-1 ((t :inherit isearch)))
-   `(ivy-minibuffer-match-face-2 ((t :inherit isearch)))
-   `(ivy-minibuffer-match-face-3 ((t :inherit isearch)))
-   `(ivy-minibuffer-match-face-4 ((t :inherit isearch)))
+   `(ivy-minibuffer-match-face-1 ((t :background ,boss-bg :foreground ,boss-yellow-bright)))
+   `(ivy-minibuffer-match-face-2 ((t :inherit ivy-minibuffer-match-face-1)))
+   `(ivy-minibuffer-match-face-3 ((t :inherit ivy-minibuffer-match-face-1)))
+   `(ivy-minibuffer-match-face-4 ((t :inherit ivy-minibuffer-match-face-1)))
 
    ;;headers
    `(diff-file-header ((t :background ,boss-bg-light)))
