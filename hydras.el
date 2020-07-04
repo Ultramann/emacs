@@ -1,5 +1,10 @@
 ;;^ are a special no width character to help visual spacing in definitions
 
+(defun terminal ()
+  (interactive)
+  (ansi-term "/bin/bash")
+  (rename-buffer "*term*"))
+
 ;; Window
 (defhydra split-horizontal (:hint nil
 			    :foreign-keys warn
@@ -9,15 +14,17 @@
   "
 ^Horizonal
 ^-^------------^-^----------------^-^--------
-_b_: buffer    _g_: google        _s_: eshell
-_f_: file      _G_: google-tab    _n_: none
+_b_: buffer    _g_: google        _e_: eshell
+_f_: file      _G_: google-tab    _t_: terminal
+_n_: none
 [_<escape>_]: quit
 "
   ("b" persp-ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
   ("G" google-tab)
-  ("s" eshell)
+  ("e" eshell)
+  ("t" terminal)
   ("n" nil)
   ("<escape>" delete-window :color teal))
 
@@ -29,15 +36,17 @@ _f_: file      _G_: google-tab    _n_: none
   "
 ^Vertical
 ^-^------------^-^----------------^-^--------
-_b_: buffer    _g_: google        _s_: eshell
-_f_: file      _G_: google-tab    _n_: none
+_b_: buffer    _g_: google        _e_: eshell
+_f_: file      _G_: google-tab    _t_: terminal
+_n_: none
 [_<escape>_]: quit
 "
   ("b" persp-ivy-switch-buffer)
   ("f" counsel-find-file)
   ("g" google)
   ("G" google-tab)
-  ("s" eshell)
+  ("e" eshell)
+  ("t" terminal)
   ("n" nil)
   ("<escape>" delete-window :color teal))
 
@@ -95,10 +104,13 @@ _K_: kill         _f_: fullscreen
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
 ^Run
-^-^------------^-^--------------^-^----------------
-_e_: eshell    _t_: terminal    _d_: docker-compose
+^-^----------------^-^-----------------^-^----------------
+_e_: eshell        _t_: terminal       _d_: docker-compose
+_s_: sync-shell    _a_: async-shell
 "
-  ("t" (lambda () (interactive) (ansi-term "/bin/bash") (rename-buffer "*term*")))
   ("e" eshell)
+  ("t" terminal)
   ("d" cg-docker-compose-up)
+  ("s" shell-command)
+  ("a" sync-shell-command)
   ("<escape>" nil "quit"))

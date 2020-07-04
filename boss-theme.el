@@ -217,6 +217,14 @@
    `(eshell-ls-unreadable ((t :foreground ,boss-fg)))
    `(nobreak-space ((t :foreground nil :background nil)))
 
+   ;; terminal
+   `(term-color-blue ((t :foreground ,boss-blue-dark)))
+   `(term-color-cyan ((t :foreground ,boss-blue-light)))
+   `(term-color-green ((t :foreground ,boss-green)))
+   `(term-color-magenta ((t :foreground ,boss-purple)))
+   `(term-color-red ((t :foreground ,boss-red)))
+   `(term-color-yellow ((t :foreground ,boss-yellow)))
+
    ;; w3m
    `(w3m-anchor ((t :foreground ,boss-blue-med)))
    `(w3m-image-anchor ((t :foreground ,boss-mono-dark :background ,boss-bg)))
