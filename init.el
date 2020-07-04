@@ -210,7 +210,7 @@
    "C-a"       'term-send-raw
    "C-e"       'term-send-raw
    "C-c"       'term-send-raw
-   "s-v"       'term-paste)
+   "C-v"       'term-paste)
 
 (defun term-mode-settings ()
   "Kill terminal w/o prompt"
@@ -307,8 +307,6 @@
   "C-b" 'persp-ivy-switch-buffer
   "C-f" 'counsel-find-file
   "C-g" 'magit-status
-  "C-s" 'shell-command
-  "C-a" 'async-shell-command
   "C-u" 'evil-scroll-up
   "C-h" 'evil-window-left
   "C-j" 'evil-window-down
