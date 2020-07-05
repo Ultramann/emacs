@@ -30,7 +30,7 @@
       scroll-margin 5
       display-time-default-load-average nil
       frame-inhibit-implied-resize t)
-(set-frame-font "-PfEd-DejaVu Sans Mono-normal-normal-normal--14-*-*-*-m-0-iso10646-1")
+(set-frame-font "-*-Menlo-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
 
 ;; custom
 (setq custom-file "~/.emacs.d/custom.el")
