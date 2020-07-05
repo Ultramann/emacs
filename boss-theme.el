@@ -232,9 +232,9 @@
    `(w3m-header-line-content ((t :foreground ,boss-blue-light :background ,boss-bg-light)))
    `(w3m-header-line-title ((t :foreground ,boss-yellow :background ,boss-bg-light)))
 
-   ;; linum
-   `(linum ((t :foreground ,boss-mono-light :background ,boss-bg-light)))
-   `(linum-highlight-face ((t :foreground ,boss-bg :background ,boss-mono-light)))
+   ;; line-numbers
+   `(line-number ((t :foreground ,boss-mono-light :background ,boss-bg-light)))
+   `(line-number-current-line ((t :foreground ,boss-bg :background ,boss-mono-light)))
 
    ;; mode-line
    `(mode-line ((t :background ,boss-mono-light :foreground ,boss-bg-light)))

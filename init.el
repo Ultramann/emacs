@@ -1,5 +1,7 @@
 ;; TODO: magit, w3m tabs, copy of buffer, evil-surround, evil-goggles
 ;; w3m filters: https://www.emacswiki.org/emacs/WThreeMFilters
+
+;; packages
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
@@ -12,29 +14,55 @@
 (eval-when-compile
   (require 'use-package))
 
+;; theme
 (load-theme 'boss t)
 
+;; random
+(setq inhibit-splash-screen t
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message t
+      make-backup-files nil
+      create-lockfiles nil
+      auto-save-default nil
+      help-window-select t
+      ring-bell-function 'ignore
+      scroll-step 1
+      scroll-margin 5
+      display-time-default-load-average nil
+      frame-inhibit-implied-resize t)
+(set-frame-font "-PfEd-DejaVu Sans Mono-normal-normal-normal--14-*-*-*-m-0-iso10646-1")
+
+;; custom
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(setq inhibit-splash-screen t inhibit-startup-message t inhibit-startup-echo-area-message t
-      make-backup-files nil auto-save-default nil help-window-select t create-lockfiles nil
-      ring-bell-function 'ignore scroll-step 1 scroll-margin 5 show-paren-delay 0
-      display-time-default-load-average nil frame-inhibit-implied-resize t
-      display-time-string-forms '((format-time-string "%l:%M %p" now)))
-
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
-(show-paren-mode 1)
-(line-number-mode 1)
-(column-number-mode 1)
-(display-time-mode 1)
-(global-visual-line-mode t)
+;; convenience
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
 (defun print-type (var) (print (type-of var)))
 
+;; line numbers
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'text-mode-hook 'display-line-numbers-mode)
+
+;; full screen
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+(column-number-mode 1)
+(global-visual-line-mode t)
+(toggle-frame-fullscreen)
+(fringe-mode 0) ;; might want to remove for git/flycheck/flake8
+
+;; time
+(setq display-time-string-forms '((format-time-string "%I:%M %p" now)))
+(display-time-mode 1)
+
+;; parenthesis
+(setq show-paren-mode 1
+      show-paren-delay 0)
+
+;; general
 (use-package general
   :ensure t
   :config
@@ -53,6 +81,7 @@
     :keymaps 'transient-base-map
     "<escape>" 'transient-quit-one))
 
+;; evil
 (use-package evil
   :ensure t
   :demand t
@@ -142,15 +171,6 @@
     "RET" 'dired-single-buffer
     "^"   'dired-single-up-directory))
 
-(use-package hlinum
-  :ensure t
-  :init
-  (setq linum-format " %d ")
-  (add-hook 'prog-mode-hook 'linum-mode)
-  (add-hook 'text-mode-hook 'linum-mode)
-  :config
-  (hlinum-activate))
-
 (use-package counsel
   :ensure t)
 
@@ -218,6 +238,17 @@
     (when (processp proc)
       (set-process-query-on-exit-flag proc nil))))
 (add-hook 'term-mode-hook 'term-mode-settings)
+
+(defun exit-term-settings ()
+  "Kill terminal buffer with `exit` at prompt"
+  (let* ((buff (current-buffer))
+	 (proc (get-buffer-process buff)))
+    (set-process-sentinel
+     proc
+     `(lambda (process event)
+	(if (string= event "finished\n")
+	    (kill-buffer ,buff))))))
+(add-hook 'term-exec-hook 'exit-term-settings)
 
 ;; magit
 (use-package evil-magit
@@ -326,19 +357,19 @@
                   (directory-file-name default-directory))))
         "   "
 	'(:eval (propertize
-		 (when (bound-and-true-p linum-mode)
-		       (cond ((buffer-modified-p) "[+] ")
-			      (buffer-read-only "[x] ")))
-		'face 'bold))
+		 (if (bound-and-true-p display-line-numbers-mode)
+		     (cond ((buffer-modified-p) "[+] ")
+			   (buffer-read-only "[x] ")
+			   (t ""))
+		     "")
+		 'face 'bold))
         '(:eval (propertize (buffer-name) 'face 'bold))
  	"   "
-        '(:eval (when (bound-and-true-p linum-mode)
+        '(:eval (when (bound-and-true-p display-line-numbers-mode)
 			"-%l|%c   "))
 	'(:eval (propertize (if vc-mode
 				(remove-git vc-mode)
 			        "-")
-			    'face 'bold))
-	"  "
+		 'face 'bold))
+	"   "
 	mode-line-misc-info))
-
-(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
