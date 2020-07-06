@@ -110,8 +110,8 @@
   :ensure t)
 
 ;; parenthesis
+(setq show-paren-delay 0)
 (show-paren-mode 1)
-(show-paren-delay 0)
 
 (use-package rainbow-delimiters
   :ensure t)
