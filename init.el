@@ -58,11 +58,6 @@
 (setq display-time-string-forms '((format-time-string "%I:%M %p" now)))
 (display-time-mode 1)
 
-;; parenthesis
-;; TODO: THIS ISN'T WORKING!!!
-(setq show-paren-mode 1
-      show-paren-delay 0)
-
 ;; general
 (use-package general
   :ensure t
@@ -113,6 +108,10 @@
 (use-package evil-collection
   :after evil
   :ensure t)
+
+;; parenthesis
+(show-paren-mode 1)
+(show-paren-delay 0)
 
 (use-package rainbow-delimiters
   :ensure t)
