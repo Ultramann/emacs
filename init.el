@@ -1,4 +1,4 @@
-;; TODO: magit, w3m tabs, copy of buffer, evil-surround, evil-goggles
+;; TODO: w3m tabs, icicles, copy of buffer, evil-surround, evil-goggles
 ;; w3m filters: https://www.emacswiki.org/emacs/WThreeMFilters
 
 ;; packages
@@ -177,6 +177,7 @@
 ;; w3m
 (use-package w3m
   :ensure t
+  :defer t
   :after evil-collection
   :init
   (setq w3m-command (locate-file "w3m" exec-path)
@@ -208,18 +209,16 @@
     (w3m-goto-url-new-session (concat "google.com/search?q=" query))))
 
 ;; eshell
-(use-package eshell
-  :init
-  (add-hook 'eshell-mode-hook
-            (lambda ()
+(add-hook 'eshell-mode-hook
+          (lambda ()
 	      ;; local-set-key? update with general? But it complains about
 	      ;; the mode map being nil...
-              (define-key eshell-mode-map (kbd "TAB")
-                (lambda () (interactive) (pcomplete-std-complete)))
-	      (eshell/alias "vim" "find-file $1")
-              (add-to-list 'eshell-visual-commands "tail")
-              (add-to-list 'eshell-visual-commands "top")
-              (add-to-list 'eshell-visual-commands "htop"))))
+            (define-key eshell-mode-map (kbd "TAB")
+              (lambda () (interactive) (pcomplete-std-complete)))
+	    (eshell/alias "vim" "find-file $1")
+            (add-to-list 'eshell-visual-commands "tail")
+            (add-to-list 'eshell-visual-commands "top")
+            (add-to-list 'eshell-visual-commands "htop")))
 
 ;; terminal
 (general-define-key
@@ -253,6 +252,7 @@
 ;; magit
 (use-package evil-magit
   :ensure t
+  :defer 1
   :config
   (general-define-key
    :states 'normal
@@ -284,6 +284,7 @@
 ;; docker
 (use-package docker
   :ensure t)
+
 (define-transient-command cg-docker-compose-up ()
   "Transient for \"docker-compose up\"."
   :man-page "docker-compose up"
@@ -312,6 +313,7 @@
 ;; markdown
 (use-package markdown-mode
   :ensure t
+  :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
