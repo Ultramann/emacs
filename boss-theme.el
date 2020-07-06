@@ -13,6 +13,7 @@
     ("boss-bg-shadow"     . "#1C1C1C")
     ("boss-bg-light"      . "#262626")
     ("boss-bg-highlight"  . "#3A3A3A")
+    ("boss-mono-white"    . "#FFFFFF")
     ("boss-mono-light"    . "#B2B2B2")
     ("boss-mono-med"      . "#9E9E9E")
     ("boss-mono-dark"     . "#767676")
@@ -61,12 +62,12 @@
    `(minibuffer-prompt ((t :foreground ,boss-mono-light)))
    `(show-paren-mismatch ((t :background ,boss-pink)))
    `(show-paren-match ((t :foreground ,boss-pink)))
-   `(rainbow-delimiters-depth-1-face ((t :foreground ,boss-red)))
+   `(rainbow-delimiters-depth-1-face ((t :foreground ,boss-red-bright)))
    `(rainbow-delimiters-depth-2-face ((t :foreground ,boss-purple-bright)))
    `(rainbow-delimiters-depth-3-face ((t :foreground ,boss-blue-light)))
    `(rainbow-delimiters-depth-4-face ((t :foreground ,boss-green-bright)))
    `(rainbow-delimiters-depth-5-face ((t :foreground ,boss-yellow-bright)))
-   `(rainbow-delimiters-depth-6-face ((t :foreground ,boss-red)))
+   `(rainbow-delimiters-depth-6-face ((t :foreground ,boss-red-bright)))
    `(rainbow-delimiters-depth-7-face ((t :foreground ,boss-purple-bright)))
    `(rainbow-delimiters-depth-8-face ((t :foreground ,boss-blue-light)))
    `(rainbow-delimiters-depth-9-face ((t :foreground ,boss-green-bright)))
@@ -123,7 +124,7 @@
    `(ivy-minibuffer-match-face-3 ((t :inherit ivy-minibuffer-match-face-1)))
    `(ivy-minibuffer-match-face-4 ((t :inherit ivy-minibuffer-match-face-1)))
 
-   ;;headers
+   ;; headers
    `(diff-file-header ((t :background ,boss-bg-light)))
    `(header-line ((t :background ,boss-bg)))
    `(magit-header-line ((t :foreground ,boss-blue-dark)))
@@ -234,7 +235,8 @@
 
    ;; line-numbers
    `(line-number ((t :foreground ,boss-mono-light :background ,boss-bg-light)))
-   `(line-number-current-line ((t :foreground ,boss-bg :background ,boss-mono-light)))
+   `(line-number-current-line
+     ((t :foreground ,boss-mono-white :background ,boss-bg-highlight :weight bold)))
 
    ;; mode-line
    `(mode-line ((t :background ,boss-mono-light :foreground ,boss-bg-light)))
@@ -242,6 +244,5 @@
    `(mode-line-emphasis ((t :weight bold)))
    `(mode-line-inactive ((t :background ,boss-bg-shadow)))
    ))
-
 
 (provide-theme 'boss)

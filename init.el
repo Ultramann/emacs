@@ -59,6 +59,7 @@
 (display-time-mode 1)
 
 ;; parenthesis
+;; TODO: THIS ISN'T WORKING!!!
 (setq show-paren-mode 1
       show-paren-delay 0)
 
