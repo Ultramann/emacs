@@ -51,7 +51,7 @@
 (toggle-scroll-bar -1)
 (column-number-mode 1)
 (global-visual-line-mode t)
-(toggle-frame-fullscreen)
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 (fringe-mode 0) ;; might want to remove for git/flycheck/flake8
 
 ;; time
