@@ -90,6 +90,26 @@
 	evil-want-keybinding nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
+  ;; Evil searching 
+  (defun evil-ex-search-symbol-forward () (evil-ex-search-word-forward nil 'symbol))
+  ;; Define symbol search motions explicitly, bind to * and #. These are just copies
+  ;; of evil-ex-search-word-for/backward from evil-commands.el with 'symbol explictly
+  ;; passed to evil-ex-start-word-search. Default emacs word searching is bound through
+  ;; leader 8 and 3 (space instead of shift) in leader section
+  (evil-define-motion evil-ex-search-symbol-forward (count &optional symbol)
+    "Search for the next occurrence of symbol under the cursor."
+    :jump t
+    :type exclusive
+    (interactive (list (prefix-numeric-value current-prefix-arg)
+                       evil-symbol-word-search))
+    (evil-ex-start-word-search nil 'forward count 'symbol))
+  (evil-define-motion evil-ex-search-symbol-backward (count &optional symbol)
+    "Search for the next occurrence of word under the cursor."
+    :jump t
+    :type exclusive
+    (interactive (list (prefix-numeric-value current-prefix-arg)
+                       evil-symbol-word-search))
+    (evil-ex-start-word-search nil 'backward count 'symbol))
   (setq-default evil-cross-lines t)
   ;; maybe there's a better way to do this:
   ;; https://github.com/emacs-evil/evil/issues/622#issuecomment-598841628
@@ -102,7 +122,10 @@
     [remap evil-previous-line] 'evil-previous-visual-line
     [remap evil-next-line]     'evil-next-visual-line
     "C-v"                      'evil-visual-char
-    "v"                        'evil-visual-block)
+    "v"                        'evil-visual-block
+    "*"                        'evil-ex-search-symbol-forward
+    "#"                        'evil-ex-search-symbol-forward
+    )
   (evil-mode 1))
 
 (use-package evil-collection
@@ -331,7 +354,9 @@
   "o" 'evil-ex-nohighlight
   "u" 'redo
   "g" 'google
-  "G" 'google-tab)
+  "G" 'google-tab
+  "8" 'evil-ex-search-word-forward
+  "3" 'evil-ex-search-word-backward)
 
 ;; control
 (general-define-key
