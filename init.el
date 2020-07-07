@@ -124,8 +124,7 @@
     "C-v"                      'evil-visual-char
     "v"                        'evil-visual-block
     "*"                        'evil-ex-search-symbol-forward
-    "#"                        'evil-ex-search-symbol-forward
-    )
+    "#"                        'evil-ex-search-symbol-backward)
   (evil-mode 1))
 
 (use-package evil-collection
