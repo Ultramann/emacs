@@ -90,7 +90,7 @@
 	evil-want-keybinding nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
-  ;; Evil searching 
+  ;; Evil searching
   (defun evil-ex-search-symbol-forward () (evil-ex-search-word-forward nil 'symbol))
   ;; Define symbol search motions explicitly, bind to * and #. These are just copies
   ;; of evil-ex-search-word-for/backward from evil-commands.el with 'symbol explictly
@@ -150,7 +150,8 @@
   (setq persp-initial-frame-name "misc"
 	persp-show-modestring nil)
   :config
-  (persp-mode))
+  ;; Only setup perspective on startup
+  (when (not persp-mode) (persp-mode)))
 
 (defun toggle-window-fullscreen ()
   (interactive)
@@ -298,7 +299,7 @@
   (evil-ex-define-cmd "wq" 'with-editor-finish))
 (add-hook 'git-commit-mode-hook 'magit-ex-cmd)
 ;; from doom-emacs
-(defun magit-update-vc () 
+(defun magit-update-vc ()
     (dolist (buf (buffer-list))
       (with-current-buffer buf
         (vc-refresh-state))))
