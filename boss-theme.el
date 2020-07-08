@@ -219,6 +219,7 @@
    `(nobreak-space ((t :foreground nil :background nil)))
 
    ;; terminal
+   `(term-color-black ((t :foreground ,boss-fg)))
    `(term-color-blue ((t :foreground ,boss-blue-dark)))
    `(term-color-cyan ((t :foreground ,boss-blue-light)))
    `(term-color-green ((t :foreground ,boss-green)))
