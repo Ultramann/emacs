@@ -353,10 +353,16 @@
   "r" 'cg-run/body
   "o" 'evil-ex-nohighlight
   "u" 'redo
+  "c" 'comment-dwim
   "g" 'google
   "G" 'google-tab
   "8" 'evil-ex-search-word-forward
   "3" 'evil-ex-search-word-backward)
+
+(general-define-key
+  :states 'visual
+  :prefix "SPC"
+  "c" 'comment-dwim)
 
 ;; control
 (general-define-key
