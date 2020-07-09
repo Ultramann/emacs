@@ -41,9 +41,12 @@
 (defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
 (defun print-type (var) (print (type-of var)))
 
-;; line numbers
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'text-mode-hook 'display-line-numbers-mode)
+;; line numbers and whitespace highlighting
+(defun display-ln-hl-ws ()
+  (display-line-numbers-mode)
+  (setq show-trailing-whitespace t))
+(add-hook 'prog-mode-hook 'display-ln-hl-ws)
+(add-hook 'text-mode-hook 'display-ln-hl-ws)
 
 ;; full screen
 (menu-bar-mode -1)
