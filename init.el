@@ -40,13 +40,25 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
 (defun print-type (var) (print (type-of var)))
+(defun setup-tabs (width)
+  ;; Unsure why I can't use setq-local, it throws an error, this works though
+  (make-local-variable 'tab-stop-list)
+  (setq tab-stop-list (mapcar (lambda (tab-stop) (* width tab-stop))
+		        '(1 2 3))
+        indent-tabs-mode nil))
 
-;; line numbers and whitespace highlighting
-(defun display-ln-hl-ws ()
+;; prog and text modes
+(defun prog-text-settings ()
+  ;; line numbers
   (display-line-numbers-mode)
-  (setq show-trailing-whitespace t))
-(add-hook 'prog-mode-hook 'display-ln-hl-ws)
-(add-hook 'text-mode-hook 'display-ln-hl-ws)
+  ;; trailing whitespace
+  (setq-local show-trailing-whitespace t)
+  ;; tab is goes to tab stops
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  ;; default tab setup
+  (setup-tabs 4))
+(add-hook 'prog-mode-hook 'prog-text-settings)
+(add-hook 'text-mode-hook 'prog-text-settings)
 
 ;; full screen
 (menu-bar-mode -1)
@@ -329,8 +341,7 @@
 
 ;; python
 (add-hook 'python-mode-hook
-  (lambda () (setq-local tab-width 4)
-	     (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+  (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 (general-define-key
   :states 'insert
   :keymaps 'python-mode-map
