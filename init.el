@@ -114,9 +114,9 @@
   ;; maybe there's a better way to do this:
   ;; https://github.com/emacs-evil/evil/issues/622#issuecomment-598841628
   (evil-ex-define-cmd "q" 'kill-this-buffer)
-  (evil-ex-define-cmd "wq" '(lambda () (interactive)
-			      (save-buffer)
-			      (kill-this-buffer)))
+  (evil-ex-define-cmd "wq" (lambda () (interactive)
+			     (save-buffer)
+			     (kill-this-buffer)))
   (general-define-key
     :states 'normal
     [remap evil-previous-line] 'evil-previous-visual-line
