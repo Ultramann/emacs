@@ -391,6 +391,7 @@
   "C-b" 'persp-ivy-switch-buffer
   "C-f" 'counsel-find-file
   "C-g" 'magit-status
+  "C-;" 'help
   "C-u" 'evil-scroll-up
   "C-h" 'evil-window-left
   "C-j" 'evil-window-down
