@@ -249,10 +249,12 @@
 ;; eshell
 (add-hook 'eshell-mode-hook
           (lambda ()
-	      ;; local-set-key? update with general? But it complains about
-	      ;; the mode map being nil...
-            (define-key eshell-mode-map (kbd "TAB")
-              (lambda () (interactive) (pcomplete-std-complete)))
+            ;; There's and issue with the way that eshell set's up its
+            ;; mode map, have to do manually with a hook. See:
+            ;; https://github.com/noctuid/general.el/issues/80
+            (evil-define-key 'insert 'eshell-mode-map
+              "TAB" (lambda () (interactive) (pcomplete-std-complete)))
+            (evil-local-set-key 'normal (kbd "RET") (kbd "GA"))
 	    (eshell/alias "vim" "find-file $1")
             (add-to-list 'eshell-visual-commands "tail")
             (add-to-list 'eshell-visual-commands "top")
