@@ -399,6 +399,7 @@
   "o" 'evil-ex-nohighlight
   "u" 'redo
   "c" 'comment-dwim
+  "b" 'browse-url-at-point ;; TODO: might be worth making a w3m hydra at this point
   "g" 'google
   "G" 'google-tab
   "8" 'evil-ex-search-word-forward
