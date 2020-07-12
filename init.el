@@ -8,8 +8,8 @@
                          ("gnu"   . "http://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
+(if (package-installed-p 'use-package)
+  (package-refresh-contents t)
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
