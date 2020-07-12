@@ -186,6 +186,29 @@
   :config
   (ivy-mode 1))
 
+(use-package company
+  :ensure t
+  :init
+  (setq company-selection-wrap-around t
+        company-idle-delay nil
+        company-dabbrev-downcase nil
+        company-backends '(company-dabbrev-code
+                           company-dabbrev))
+  ;; for "buffer local" company backends see:
+  ;; github.com/company-mode/company-mode/issues/839
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+
+(general-define-key
+  :keymaps 'company-active-map
+  "C-n" 'company-select-next
+  "C-p" 'company-select-previous)
+
+(general-define-key
+  :states 'insert
+  "C-n" 'company-complete
+  "C-p" 'company-complete)
+
 ;; dired
 (use-package dired-single
   :ensure t
