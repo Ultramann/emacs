@@ -213,21 +213,23 @@
 (use-package dired-single
   :ensure t
   :config
-  (general-define-key
+  (general-define-key  ;; TODO: consider doing this with a hydra
     :states 'normal
     :keymaps 'dired-mode-map
-    "C"   'dired-do-copy
+    "c"   'dired-do-copy
+    "C"   'dired-create-directory
+    "R"   'dired-do-rename
+    "T"   'dired-do-touch
     "d"   'dired-flag-file-deletion
+    "D"   'dired-flag-files-regexp
+    "x"   'dired-do-flagged-delete
     "g"   'dired-do-find-regexp
+    "s"   'dired-do-find-regexp-and-replace
     "m"   'dired-mark
-    "M"   'dired-create-directory
+    "M"   'dired-mark-files-regexp
     "o"   'dired-find-file-other-window
     "r"   'revert-buffer
-    "R"   'dired-do-rename
-    "s"   'dired-do-find-regexp-and-replace
-    "T"   'dired-do-touch
     "u"   'dired-unmark
-    "x"   'dired-do-flagged-delete
     "DEL" 'dired-unmark-backward
     "RET" 'dired-single-buffer
     "^"   'dired-single-up-directory))
