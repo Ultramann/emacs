@@ -40,12 +40,13 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
 (defun print-type (var) (print (type-of var)))
-(defun setup-tabs (width)
+(defun set-up-tabs (width)
   ;; Unsure why I can't use setq-local, it throws an error, this works though
   (make-local-variable 'tab-stop-list)
   (setq tab-stop-list (mapcar (lambda (tab-stop) (* width tab-stop))
 		        '(1 2 3))
-        indent-tabs-mode nil))
+        indent-tabs-mode nil
+        evil-shift-width 2))
 
 ;; prog and text modes
 (defun prog-text-settings ()
@@ -56,7 +57,7 @@
   ;; tab is goes to tab stops
   (local-set-key (kbd "TAB") 'tab-to-tab-stop)
   ;; default tab setup
-  (setup-tabs 4))
+  (set-up-tabs 4))
 (add-hook 'prog-mode-hook 'prog-text-settings)
 (add-hook 'text-mode-hook 'prog-text-settings)
 
@@ -164,7 +165,7 @@
   (setq persp-initial-frame-name "misc"
 	persp-show-modestring nil)
   :config
-  ;; Only setup perspective on startup
+  ;; Only set up perspective on startup
   (when (not persp-mode) (persp-mode)))
 
 (defun toggle-window-fullscreen ()
@@ -388,12 +389,15 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+  :init (setq markdown-command "multimarkdown")
+  :config
+  (add-hook 'gfm-mode-hook (lambda () (set-up-tabs 2)))
+  (add-hook 'markdown-mode-hook (lambda () (set-up-tabs 2))))
 
 ;; leader
 (general-define-key
   :states 'normal
-  :keymaps 'override  ; For Dired
+  :keymaps 'override  ;; for dired
   :prefix "SPC"
   "/" 'swiper
   "w" 'cg-window/body
@@ -401,7 +405,7 @@
   "o" 'evil-ex-nohighlight
   "u" 'redo
   "c" 'comment-dwim
-  "b" 'browse-url-at-point ;; TODO: might be worth making a w3m hydra at this point
+  "b" 'browse-url-at-point  ;; TODO: might be worth making a w3m hydra at this point
   "g" 'google
   "G" 'google-tab
   "8" 'evil-ex-search-word-forward
@@ -448,7 +452,7 @@
         '(:eval (propertize (buffer-name) 'face 'bold))
  	"   "
         '(:eval (when (bound-and-true-p display-line-numbers-mode)
-			"-%l|%c   "))
+                       "-%l|%c   "))
 	'(:eval (propertize (if vc-mode
 				(remove-git vc-mode)
 			        "-")
