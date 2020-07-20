@@ -228,7 +228,10 @@
 ;; flycheck
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
+  :init
+  (setq-default
+   flycheck-disabled-checkers '(python-pylint python-mypy))
+  (global-flycheck-mode))
 
 ;; dired
 (use-package dired-single
@@ -402,7 +405,10 @@ Needed because they are globally set in the evil config."
 
 ;; python
 (add-hook 'python-mode-hook
-  (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+          (lambda ()
+            (setq flycheck-checker 'python-flake8)
+            (make-local-variable 'write-file-functions)
+            (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 (general-define-key
   :states 'insert
   :keymaps 'python-mode-map
