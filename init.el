@@ -210,6 +210,11 @@
   "C-n" 'company-complete
   "C-p" 'company-complete)
 
+;; flycheck
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
 ;; dired
 (use-package dired-single
   :ensure t
