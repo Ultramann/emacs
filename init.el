@@ -1,5 +1,10 @@
+;;; init.el --- Cary's emacs init file  -*- lexical-binding: t; -*-
+
+;;; Commentary:
 ;; TODO: w3m tabs, icicles, copy of buffer, evil-surround, evil-goggles
 ;; w3m filters: https://www.emacswiki.org/emacs/WThreeMFilters
+
+;;; Code:
 
 ;; packages
 (require 'package)
@@ -28,7 +33,6 @@
       ring-bell-function 'ignore
       scroll-step 1
       scroll-margin 5
-      display-time-default-load-average nil
       frame-inhibit-implied-resize t)
 (set-frame-font "-*-Menlo-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
 
@@ -38,28 +42,14 @@
 
 ;; convenience
 (defalias 'yes-or-no-p 'y-or-n-p)
-(defun reload-init () (interactive) (load-file "~/.emacs.d/init.el"))
-(defun print-type (var) (print (type-of var)))
-(defun set-up-tabs (width)
-  ;; Unsure why I can't use setq-local, it throws an error, this works though
-  (make-local-variable 'tab-stop-list)
-  (setq tab-stop-list (mapcar (lambda (tab-stop) (* width tab-stop))
-		        '(1 2 3))
-        indent-tabs-mode nil
-        evil-shift-width 2))
 
-;; prog and text modes
-(defun prog-text-settings ()
-  ;; line numbers
-  (display-line-numbers-mode)
-  ;; trailing whitespace
-  (setq-local show-trailing-whitespace t)
-  ;; tab is goes to tab stops
-  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
-  ;; default tab setup
-  (set-up-tabs 4))
-(add-hook 'prog-mode-hook 'prog-text-settings)
-(add-hook 'text-mode-hook 'prog-text-settings)
+(defun reload-init ()
+  "Reload init file."
+  (interactive) (load-file "~/.emacs.d/init.el"))
+
+(defun print-type (var)
+  "Prints type of passed variable, VAR."
+  (print (type-of var)))
 
 ;; full screen
 (menu-bar-mode -1)
@@ -71,7 +61,8 @@
 (fringe-mode 0) ;; might want to remove for git/flycheck/flake8
 
 ;; time
-(setq display-time-string-forms '((format-time-string "%I:%M %p" now)))
+(defvar display-time-default-load-average nil)
+(defvar display-time-string-forms '((format-time-string "%I:%M %p" now)))
 (display-time-mode 1)
 
 ;; general
@@ -91,7 +82,7 @@
   :config
   (general-define-key
     :keymaps 'transient-base-map
-    "<escape>" 'transient-quit-one))
+    "<escape>" #'transient-quit-one))
 
 ;; evil
 (use-package evil
@@ -107,7 +98,6 @@
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
   ;; Evil searching
-  (defun evil-ex-search-symbol-forward () (evil-ex-search-word-forward nil 'symbol))
   ;; Define symbol search motions explicitly, bind to * and #. These are just copies
   ;; of evil-ex-search-word-for/backward from evil-commands.el with 'symbol explictly
   ;; passed to evil-ex-start-word-search. Default emacs word searching is bound through
@@ -129,18 +119,18 @@
   (setq-default evil-cross-lines t)
   ;; maybe there's a better way to do this:
   ;; https://github.com/emacs-evil/evil/issues/622#issuecomment-598841628
-  (evil-ex-define-cmd "q" 'kill-this-buffer)
+  (evil-ex-define-cmd "q" #'kill-this-buffer)
   (evil-ex-define-cmd "wq" (lambda () (interactive)
 			     (save-buffer)
 			     (kill-this-buffer)))
   (general-define-key
     :states 'normal
-    [remap evil-previous-line] 'evil-previous-visual-line
-    [remap evil-next-line]     'evil-next-visual-line
-    "C-v"                      'evil-visual-char
-    "v"                        'evil-visual-block
-    "*"                        'evil-ex-search-symbol-forward
-    "#"                        'evil-ex-search-symbol-backward)
+    [remap evil-previous-line] #'evil-previous-visual-line
+    [remap evil-next-line]     #'evil-next-visual-line
+    "C-v"                      #'evil-visual-char
+    "v"                        #'evil-visual-block
+    "*"                        #'evil-ex-search-symbol-forward
+    "#"                        #'evil-ex-search-symbol-backward)
   (evil-mode 1))
 
 (use-package evil-collection
@@ -148,8 +138,31 @@
   :ensure t)
 
 ;; parenthesis
-(setq show-paren-delay 0)
+(defvar show-paren-delay 0)
 (show-paren-mode 1)
+
+;; tabs
+(defun set-up-tab-width (width)
+  "Set tab stop list to multiples of WIDTH, and evil shift width to WIDTH."
+  (setq-local tab-stop-list (mapcar (lambda (tab-stop) (* width tab-stop))
+                                    '(1 2 3)))
+  (setq-local evil-shift-width width))
+
+;; prog and text modes
+(defun prog-text-settings ()
+  "Set up defaults for programming and text modes."
+  ;; line numbers
+  (display-line-numbers-mode)
+  ;; trailing whitespace
+  (setq-local show-trailing-whitespace t)
+  ;; Don't use tabs, just spaces
+  (setq-local indent-tabs-mode nil)
+  ;; tab is goes to tab stops
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  ;; default tab setup
+  (set-up-tab-width 4))
+(add-hook 'prog-mode-hook #'prog-text-settings)
+(add-hook 'text-mode-hook #'prog-text-settings)
 
 (use-package rainbow-delimiters
   :ensure t)
@@ -169,6 +182,7 @@
   (when (not persp-mode) (persp-mode)))
 
 (defun toggle-window-fullscreen ()
+  "Toggle current window to full screen."
   (interactive)
   (if (= 1 (length (window-list)))
       (jump-to-register '_)
@@ -189,6 +203,7 @@
 
 (use-package company
   :ensure t
+  :defines company-dabbrev-downcase
   :init
   (setq company-selection-wrap-around t
         company-idle-delay nil
@@ -198,17 +213,17 @@
   ;; for "buffer local" company backends see:
   ;; github.com/company-mode/company-mode/issues/839
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  (add-hook 'after-init-hook #'global-company-mode))
 
 (general-define-key
   :keymaps 'company-active-map
-  "C-n" 'company-select-next
-  "C-p" 'company-select-previous)
+  "C-n" #'company-select-next
+  "C-p" #'company-select-previous)
 
 (general-define-key
   :states 'insert
-  "C-n" 'company-complete
-  "C-p" 'company-complete)
+  "C-n" #'company-complete
+  "C-p" #'company-complete)
 
 ;; flycheck
 (use-package flycheck
@@ -222,23 +237,23 @@
   (general-define-key  ;; TODO: consider doing this with a hydra
     :states 'normal
     :keymaps 'dired-mode-map
-    "c"   'dired-do-copy
-    "C"   'dired-create-directory
-    "R"   'dired-do-rename
-    "T"   'dired-do-touch
-    "d"   'dired-flag-file-deletion
-    "D"   'dired-flag-files-regexp
-    "x"   'dired-do-flagged-delete
-    "g"   'dired-do-find-regexp
-    "s"   'dired-do-find-regexp-and-replace
-    "m"   'dired-mark
-    "M"   'dired-mark-files-regexp
-    "o"   'dired-find-file-other-window
-    "r"   'revert-buffer
-    "u"   'dired-unmark
-    "DEL" 'dired-unmark-backward
-    "RET" 'dired-single-buffer
-    "^"   'dired-single-up-directory))
+    "c"   #'dired-do-copy
+    "C"   #'dired-create-directory
+    "R"   #'dired-do-rename
+    "T"   #'dired-do-touch
+    "d"   #'dired-flag-file-deletion
+    "D"   #'dired-flag-files-regexp
+    "x"   #'dired-do-flagged-delete
+    "g"   #'dired-do-find-regexp
+    "s"   #'dired-do-find-regexp-and-replace
+    "m"   #'dired-mark
+    "M"   #'dired-mark-files-regexp
+    "o"   #'dired-find-file-other-window
+    "r"   #'revert-buffer
+    "u"   #'dired-unmark
+    "DEL" #'dired-unmark-backward
+    "RET" #'dired-single-buffer
+    "^"   #'dired-single-up-directory))
 
 (use-package counsel
   :ensure t)
@@ -248,6 +263,7 @@
   :ensure t
   :defer t
   :after evil-collection
+  :defines w3m-session-crash-recovery
   :init
   (setq w3m-command (locate-file "w3m" exec-path)
         browse-url-browser-function 'w3m-browse-url
@@ -259,19 +275,21 @@
   (general-define-key
     :states 'normal
     :keymaps 'w3m-mode-map
-    "s" 'w3m-submit-form)
+    "s" #'w3m-submit-form)
   (evil-collection-init 'w3m))
 
 ;; Make these two function higher order taking
 ;; 'w3m-goto-url(-new-session) as an argument. Not sure if this
 ;; how hard this will be with the interactive parameter
 (defun google (query)
+  "Search for QUERY with google in w3m buffer."
   (interactive "sgoogle: ")
   (unless (string= query "q")
     (w3m)
     (w3m-goto-url (concat "google.com/search?q=" query))))
 
 (defun google-tab (query)
+  "Search for QUERY with google in new w3m buffer."
   (interactive "sgoogle: ")
   (unless (string= query "q")
     (w3m)
@@ -286,37 +304,38 @@
             (evil-define-key 'insert 'eshell-mode-map
               "TAB" (lambda () (interactive) (pcomplete-std-complete)))
             (evil-local-set-key 'normal (kbd "RET") (kbd "GA"))
-	    (eshell/alias "vim" "find-file $1")
+            (defvar eshell-visual-commands)
             (add-to-list 'eshell-visual-commands "tail")
             (add-to-list 'eshell-visual-commands "top")
-            (add-to-list 'eshell-visual-commands "htop")))
+            (add-to-list 'eshell-visual-commands "htop")
+            (eshell/alias "vim" "find-file $1")))
 
 ;; terminal
 (general-define-key
   :states  'insert
   :keymaps 'term-raw-map
-  "<backtab>" 'term-send-raw
-  "C-r"       'term-send-raw
-  "C-a"       'term-send-raw
-  "C-e"       'term-send-raw
-  "C-c"       'term-send-raw
-  "C-v"       'term-paste)
+  "<backtab>" #'term-send-raw
+  "C-r"       #'term-send-raw
+  "C-a"       #'term-send-raw
+  "C-e"       #'term-send-raw
+  "C-c"       #'term-send-raw
+  "C-v"       #'term-paste)
 
 (general-define-key
   :states  'normal
   :keymaps 'term-raw-map
-  "k" 'scroll-down
-  "j" 'scroll-up)
+  "k" #'scroll-down
+  "j" #'scroll-up)
 
 (defun term-mode-settings ()
-  "Kill terminal w/o prompt"
+  "Kill terminal w/o prompt."
   (let ((proc (get-buffer-process (current-buffer))))
     (when (processp proc)
       (set-process-query-on-exit-flag proc nil))))
-(add-hook 'term-mode-hook 'term-mode-settings)
+(add-hook 'term-mode-hook #'term-mode-settings)
 
 (defun exit-term-settings ()
-  "Kill terminal buffer with `exit` at prompt"
+  "Kill terminal buffer with `exit` at prompt."
   (let* ((buff (current-buffer))
 	 (proc (get-buffer-process buff)))
     (set-process-sentinel
@@ -324,7 +343,7 @@
      `(lambda (process event)
 	(if (string= event "finished\n")
 	    (kill-buffer ,buff))))))
-(add-hook 'term-exec-hook 'exit-term-settings)
+(add-hook 'term-exec-hook #'exit-term-settings)
 
 ;; magit
 (use-package evil-magit
@@ -341,18 +360,21 @@
    :keymaps 'magit-status-mode-map
    "J" 'magit-section-forward
    "K" 'magit-section-backward)
-  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
-;; this is needed because q and wq are globally set in the evil config
+  (add-hook 'after-save-hook #'magit-after-save-refresh-status t))
+
 (defun magit-ex-cmd ()
-  (make-local-variable 'evil-ex-commands)
-  (setq evil-ex-commands
+  "Make q & wq work as expected.
+Needed because they are globally set in the evil config."
+  ;;(make-local-variable 'evil-ex-commands)  TODO: delete this line
+  (setq-local evil-ex-commands
 	(mapcar (lambda (cmd) (cons (car cmd) (cdr cmd)))
 		(default-value 'evil-ex-commands)))
   (evil-ex-define-cmd "q"  'with-editor-cancel)
   (evil-ex-define-cmd "wq" 'with-editor-finish))
-(add-hook 'git-commit-mode-hook 'magit-ex-cmd)
-;; from doom-emacs
+(add-hook 'git-commit-mode-hook #'magit-ex-cmd)
+
 (defun magit-update-vc ()
+  "Update magit status on file save.  From doom-emacs."
     (dolist (buf (buffer-list))
       (with-current-buffer buf
         (vc-refresh-state))))
@@ -384,7 +406,7 @@
 (general-define-key
   :states 'insert
   :keymaps 'python-mode-map
-  "RET" 'newline-and-indent)
+  "RET" #'newline-and-indent)
 
 ;; markdown
 (use-package markdown-mode
@@ -396,48 +418,49 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown")
   :config
-  (add-hook 'gfm-mode-hook (lambda () (set-up-tabs 2)))
-  (add-hook 'markdown-mode-hook (lambda () (set-up-tabs 2))))
+  (add-hook 'gfm-mode-hook (lambda () (set-up-tab-width 2)))
+  (add-hook 'markdown-mode-hook (lambda () (set-up-tab-width 2))))
 
 ;; leader
 (general-define-key
   :states 'normal
   :keymaps 'override  ;; for dired
   :prefix "SPC"
-  "/" 'swiper
-  "w" 'cg-window/body
-  "r" 'cg-run/body
-  "o" 'evil-ex-nohighlight
-  "u" 'redo
-  "c" 'comment-dwim
-  "b" 'browse-url-at-point  ;; TODO: might be worth making a w3m hydra at this point
-  "g" 'google
-  "G" 'google-tab
-  "8" 'evil-ex-search-word-forward
-  "3" 'evil-ex-search-word-backward)
+  "/" #'swiper
+  "w" #'cg-window/body
+  "r" #'cg-run/body
+  "o" #'evil-ex-nohighlight
+  "u" #'redo
+  "c" #'comment-dwim
+  "b" #'browse-url-at-point  ;; TODO: might be worth making a w3m hydra at this point
+  "g" #'google
+  "G" #'google-tab
+  "8" #'evil-ex-search-word-forward
+  "3" #'evil-ex-search-word-backward)
 
 (general-define-key
   :states 'visual
   :prefix "SPC"
-  "c" 'comment-dwim)
+  "c" #'comment-dwim)
 
 ;; control
 (general-define-key
   :states '(normal insert motion)
   :keymaps 'override
-  "C-b" 'persp-ivy-switch-buffer
-  "C-f" 'counsel-find-file
-  "C-g" 'magit-status
-  "C-;" 'help
-  "C-u" 'evil-scroll-up
-  "C-h" 'evil-window-left
-  "C-j" 'evil-window-down
-  "C-k" 'evil-window-up
-  "C-l" 'evil-window-right)
+  "C-b" #'persp-ivy-switch-buffer
+  "C-f" #'counsel-find-file
+  "C-g" #'magit-status
+  "C-;" #'help
+  "C-u" #'evil-scroll-up
+  "C-h" #'evil-window-left
+  "C-j" #'evil-window-down
+  "C-k" #'evil-window-up
+  "C-l" #'evil-window-right)
 
 ;; modeline
 (defun remove-git (branch-string)
-   (replace-regexp-in-string " Git\\(:\\|-\\)" "" branch-string))
+  "Remove unnecessary Git<punctuation mark> from BRANCH-STRING,`vc-mode` string."
+  (replace-regexp-in-string " Git\\(:\\|-\\)" "" branch-string))
 
 (setq-default mode-line-format
   (list "   "
@@ -464,3 +487,6 @@
 		 'face 'bold))
 	"   "
 	mode-line-misc-info))
+
+(provide 'init)
+;;; init.el ends here
