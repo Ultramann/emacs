@@ -1,8 +1,13 @@
+;;; package --- Cary's custom color theme
+
+;;; Commentary:
 ;; Set up, but not colors, taken from https://github.com/jonathanchu/atom-one-dark-theme.
 ;; list-colors-display show all the current color options
 ;; list-faces-display (counsel-faces) shows colors for all current faces
 ;; rainbow-mode highlights color words and definitions with the color
 ;; (counsel-)describe-face shows all information about face for word under point
+
+;;; Code:
 
 (deftheme boss
   "Boss color theme, created by Cary Goltermann")
