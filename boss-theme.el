@@ -102,6 +102,7 @@
 
    ;; compilation
    `(compilation-face ((t :foreground ,boss-fg)))
+   `(compilation-info ((t :background ,boss-bg-light :foreground ,boss-green)))
    `(compilation-line-number ((t :foreground ,boss-mono-med)))
    `(compilation-column-number ((t :foreground ,boss-mono-med)))
 
