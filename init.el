@@ -446,6 +446,8 @@ Needed because they are globally set in the evil config."
   "b" #'browse-url-at-point  ;; TODO: might be worth making a w3m hydra at this point
   "g" #'google
   "G" #'google-tab
+  "j" #'evil-scroll-down
+  "k" #'evil-scroll-up
   "8" #'evil-ex-search-word-forward
   "3" #'evil-ex-search-word-backward)
 
