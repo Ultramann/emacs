@@ -234,33 +234,6 @@
    flycheck-disabled-checkers '(python-pylint python-mypy))
   (global-flycheck-mode))
 
-;; dired
-(use-package dired-single
-  :ensure t
-  :config
-  (general-define-key  ;; TODO: consider doing this with a hydra
-    :states 'normal
-    :keymaps 'dired-mode-map
-    "c"   #'dired-do-copy
-    "C"   #'dired-create-directory
-    "d"   #'dired-flag-file-deletion
-    "D"   #'dired-flag-files-regexp
-    "g"   #'dired-do-find-regexp
-    "s"   #'dired-do-find-regexp-and-replace
-    "m"   #'dired-mark
-    "M"   #'dired-mark-files-regexp
-    "o"   #'dired-find-file-other-window
-    "r"   #'revert-buffer
-    "R"   #'dired-do-rename
-    "t"   #'dired-toggle-marks
-    "T"   #'dired-do-touch
-    "u"   #'dired-unmark
-    "U"   #'dired-unmark-all-marks
-    "x"   #'dired-do-flagged-delete
-    "DEL" #'dired-unmark-backward
-    "RET" #'dired-single-buffer
-    "^"   #'dired-single-up-directory))
-
 (use-package counsel
   :ensure t)
 
@@ -350,6 +323,42 @@
 	(if (string= event "finished\n")
 	    (kill-buffer ,buff))))))
 (add-hook 'term-exec-hook #'exit-term-settings)
+
+;; dired
+(use-package dired-single
+  :ensure t
+  :config
+  (general-define-key  ;; TODO: consider doing this with a hydra
+    :states 'normal
+    :keymaps 'dired-mode-map
+    "c"   #'dired-do-copy
+    "C"   #'dired-create-directory
+    "d"   #'dired-flag-file-deletion
+    "D"   #'dired-flag-files-regexp
+    "g"   #'dired-do-find-regexp
+    "s"   #'dired-do-find-regexp-and-replace
+    "m"   #'dired-mark
+    "M"   #'dired-mark-files-regexp
+    "o"   #'dired-find-file-other-window
+    "r"   #'revert-buffer
+    "R"   #'dired-do-rename
+    "t"   #'dired-toggle-marks
+    "T"   #'dired-do-touch
+    "u"   #'dired-unmark
+    "U"   #'dired-unmark-all-marks
+    "x"   #'dired-do-flagged-delete
+    "DEL" #'dired-unmark-backward
+    "RET" #'dired-single-buffer
+    "^"   #'dired-single-up-directory))
+
+;; xref -- used when grepping from dired
+(add-hook 'xref--xref-buffer-mode
+          (lambda ()
+            ;; There's and issue with the way that xref set's up its
+            ;; mode map, have to do manually with a hook.
+            (evil-local-set-key 'normal (kbd "TAB") #'xref-quit-and-goto-xref)
+            (evil-local-set-key 'normal (kbd "o") #'xref-show-location-at-point)
+            (evil-local-set-key 'normal (kbd "r") #'xref-query-replace-in-results)))
 
 ;; magit
 (use-package evil-magit
