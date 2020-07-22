@@ -383,26 +383,6 @@ Needed because they are globally set in the evil config."
         (vc-refresh-state))))
 (add-hook 'magit-post-refresh-hook #'magit-update-vc)
 
-;; docker
-(use-package docker
-  :ensure t)
-
-(define-transient-command cg-docker-compose-up ()
-  "Transient for \"docker-compose up\"."
-  :man-page "docker-compose up"
-  :value '("--build")
-  ["Arguments"
-   ("-b" "Build" "--build")
-   ("-c" "Scale" "--scale " transient-read-number-N0)
-   ("-d" "Detach" "-d")
-   ("-f" "Force recreate" "--force-recreate")
-   ("-n" "No deps" "--no-deps")
-   ("-r" "Remove orphans" "--remove-orphans")
-   ("-t" "Timeout" "--timeout " transient-read-number-N0)]
-  ["Actions"
-   ("u" "All services" docker-compose-run-action-for-all-services)
-   ("U" "Up" docker-compose-run-action-for-one-service)])
-
 ;; python
 (add-hook 'python-mode-hook
           (lambda ()
@@ -426,6 +406,30 @@ Needed because they are globally set in the evil config."
   :config
   (add-hook 'gfm-mode-hook (lambda () (set-up-tab-width 2)))
   (add-hook 'markdown-mode-hook (lambda () (set-up-tab-width 2))))
+
+;; go
+(use-package go-mode
+  :defer t)
+
+;; docker
+(use-package docker
+  :ensure t)
+
+(define-transient-command cg-docker-compose-up ()
+  "Transient for \"docker-compose up\"."
+  :man-page "docker-compose up"
+  :value '("--build")
+  ["Arguments"
+   ("-b" "Build" "--build")
+   ("-c" "Scale" "--scale " transient-read-number-N0)
+   ("-d" "Detach" "-d")
+   ("-f" "Force recreate" "--force-recreate")
+   ("-n" "No deps" "--no-deps")
+   ("-r" "Remove orphans" "--remove-orphans")
+   ("-t" "Timeout" "--timeout " transient-read-number-N0)]
+  ["Actions"
+   ("u" "All services" docker-compose-run-action-for-all-services)
+   ("U" "Up" docker-compose-run-action-for-one-service)])
 
 ;; leader
 (general-define-key
