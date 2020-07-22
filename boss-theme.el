@@ -96,8 +96,8 @@
    ;; company-mode
    `(company-tooltip ((t :foreground ,boss-fg :background ,boss-bg-highlight)))
    `(company-tooltip-annotation ((t :inherit company-tooltip)))
-   `(company-tooltip-selection ((t :foreground ,boss-blue-dark :background ,boss-mono-bridge :weight bold)))
-   `(company-tooltip-common ((t :inherit company-tooltip :foreground ,boss-red)))
+   `(company-tooltip-selection ((t :foreground ,boss-blue-light :background ,boss-mono-bridge :weight bold)))
+   `(company-tooltip-common ((t :inherit company-tooltip :foreground ,boss-blue-dark)))
    `(company-tooltip-common-selection ((t :inherit company-tooltip-selection)))
    `(company-tooltip-mouse ((t :inherit company-tooltip :background ,boss-mono-bridge)))
    `(company-preview ((t :background ,boss-bg)))
