@@ -132,8 +132,8 @@
    `(ivy-minibuffer-match-face-4 ((t :inherit ivy-minibuffer-match-face-1)))
 
    ;; headers
-   `(diff-file-header ((t :background ,boss-bg-light)))
    `(header-line ((t :background ,boss-bg)))
+   `(diff-file-header ((t :background ,boss-bg-light)))
    `(magit-header-line ((t :foreground ,boss-blue-dark)))
 
    ;; git-commit
