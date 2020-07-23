@@ -419,6 +419,11 @@ Needed because they are globally set in the evil config."
   (add-hook 'gfm-mode-hook (lambda () (set-up-tab-width 2)))
   (add-hook 'markdown-mode-hook (lambda () (set-up-tab-width 2))))
 
+;; yaml
+(use-package yaml-mode
+  :ensure t
+  :defer t)
+
 ;; go
 (use-package go-mode
   :defer t)
