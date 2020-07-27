@@ -153,7 +153,7 @@
    `(magit-diff-removed ((t :foreground ,boss-red)))
    `(magit-diff-removed-highlight ((t :foreground ,boss-red)))
    `(magit-diff-hunk-heading ((t :background ,boss-bg-light :foreground ,boss-mono-light)))
-   `(magit-diff-hunk-heading-highlight ((t :foreground ,boss-bg :background ,boss-mono-light)))
+   `(magit-diff-hunk-heading-highlight ((t :foreground ,boss-bg :background ,boss-mono-med)))
    `(magit-diff-hunk-heading-selection ((t :foreground ,boss-purple :background ,boss-bg-highlight)))
    `(magit-diff-context ((t :foreground ,boss-fg)))
    `(magit-diff-context-highlight ((t :foreground ,boss-fg)))
