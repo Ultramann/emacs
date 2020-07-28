@@ -114,7 +114,7 @@
    ;; search
    `(isearch ((t :foreground ,boss-bg :background ,boss-yellow-bright)))
    `(isearch-fail ((t :foreground ,boss-red-bright :background nil)))
-   `(lazy-highlight ((t :foreground ,boss-yellow-bright :inhert region)))
+   `(lazy-highlight ((t :foreground ,boss-yellow-bright)))
    `(evil-ex-substitute-matches ((t :foreground ,boss-yellow-bright :background ,boss-bg)))
    `(match ((t :foreground ,boss-yellow-bright :background ,boss-bg :underline t)))
 
