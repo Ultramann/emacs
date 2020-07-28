@@ -293,12 +293,12 @@
 (general-define-key
   :states  'insert
   :keymaps 'term-raw-map
-  "<backtab>" #'term-send-raw
-  "C-r"       #'term-send-raw
-  "C-a"       #'term-send-raw
-  "C-e"       #'term-send-raw
-  "C-c"       #'term-send-raw
-  "C-v"       #'term-paste)
+  "<S-tab>" (lambda () (interactive) (term-send-raw-string "\033[Z"))
+  "C-r"     #'term-send-raw
+  "C-a"     #'term-send-raw
+  "C-e"     #'term-send-raw
+  "C-c"     #'term-send-raw
+  "C-v"     #'term-paste)
 
 (general-define-key
   :states  'normal
