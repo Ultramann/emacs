@@ -3,6 +3,7 @@
 ;;; Commentary:
 ;; TODO: w3m tabs, icicles, copy of buffer, evil-surround, evil-goggles
 ;; w3m filters: https://www.emacswiki.org/emacs/WThreeMFilters
+;; (winner mode 1), then (winner-undo to restore window config
 
 ;;; Code:
 
@@ -253,7 +254,10 @@
   (general-define-key
     :states 'normal
     :keymaps 'w3m-mode-map
-    "s" #'w3m-submit-form)
+    "s" #'w3m-submit-form
+    "c" (lambda () (interactive)
+                (async-shell-command
+                 (concat "wget -P ~ " (w3m-anchor)))))
   (evil-collection-init 'w3m))
 
 ;; Make these two function higher order taking

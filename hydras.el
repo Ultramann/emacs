@@ -112,5 +112,8 @@ _s_: sync-shell    _a_: async-shell
   ("t" terminal)
   ("d" cg-docker-compose-up)
   ("s" shell-command)
-  ("a" sync-shell-command)
+  ("a" async-shell-command)
   ("<escape>" nil "quit"))
+
+(provide 'hydras)
+;;; hydras ends here
