@@ -168,7 +168,6 @@
   :ensure t)
 
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
   :ensure t
   :config
   (exec-path-from-shell-copy-env "PATH"))
@@ -281,7 +280,7 @@
             ;; mode map, have to do manually with a hook. See:
             ;; https://github.com/noctuid/general.el/issues/80
             (evil-define-key 'insert 'eshell-mode-map
-              "TAB" (lambda () (interactive) (pcomplete-std-complete)))
+              (kbd "TAB") (lambda () (interactive) (pcomplete-std-complete)))
             (evil-local-set-key 'normal (kbd "RET") (kbd "GA"))
             (defvar eshell-visual-commands)
             (add-to-list 'eshell-visual-commands "tail")
