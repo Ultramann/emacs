@@ -355,13 +355,12 @@
     "^"   #'dired-single-up-directory))
 
 ;; xref -- used when grepping from dired
-(add-hook 'xref--xref-buffer-mode
-          (lambda ()
-            ;; There's and issue with the way that xref set's up its
-            ;; mode map, have to do manually with a hook.
-            (evil-local-set-key 'normal (kbd "TAB") #'xref-quit-and-goto-xref)
-            (evil-local-set-key 'normal (kbd "o") #'xref-show-location-at-point)
-            (evil-local-set-key 'normal (kbd "r") #'xref-query-replace-in-results)))
+(general-define-key
+ :states 'normal
+ :keymaps 'xref--xref-buffer-mode-map
+ "TAB" #'xref-quit-and-goto-xref
+ "o"   #'xref-show-location-at-point
+ "r"   #'xref-query-replace-in-results)
 
 ;; magit
 (use-package evil-magit
@@ -371,13 +370,13 @@
   (general-define-key
    :states 'normal
    :keymaps 'magit-diff-mode-map
-   "J" 'magit-section-forward
-   "K" 'magit-section-backward)
+   "J" #'magit-section-forward
+   "K" #'magit-section-backward)
   (general-define-key
    :states 'normal
    :keymaps 'magit-status-mode-map
-   "J" 'magit-section-forward
-   "K" 'magit-section-backward)
+   "J" #'magit-section-forward
+   "K" #'magit-section-backward)
   (add-hook 'after-save-hook #'magit-after-save-refresh-status t))
 
 (defun magit-ex-cmd ()
