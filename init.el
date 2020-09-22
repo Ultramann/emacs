@@ -500,7 +500,7 @@ Needed because they are globally set in the evil config."
 
 ;; modeline
 (defun remove-git (branch-string)
-  "Remove unnecessary Git<punctuation mark> from BRANCH-STRING,`vc-mode` string."
+  "Remove unnecessary Git<punctuation mark> from BRANCH-STRING, `vc-mode` string."
   (replace-regexp-in-string " Git\\(:\\|-\\)" "" branch-string))
 
 (setq-default mode-line-format
