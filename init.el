@@ -363,6 +363,8 @@
  "r"   #'xref-query-replace-in-results)
 
 ;; magit
+(use-package magit
+  :ensure t)
 (use-package evil-magit
   :ensure t
   :defer 1
