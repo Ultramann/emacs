@@ -130,6 +130,7 @@
     [remap evil-next-line]     #'evil-next-visual-line
     "C-v"                      #'evil-visual-char
     "v"                        #'evil-visual-block
+    "'"                        #'evil-jump-backward-swap
     "*"                        #'evil-ex-search-symbol-forward
     "#"                        #'evil-ex-search-symbol-backward)
   (evil-mode 1))
@@ -430,7 +431,14 @@ Needed because they are globally set in the evil config."
 
 ;; go
 (use-package go-mode
-  :defer t)
+  :defer t
+  :config
+  (general-define-key
+    :states 'normal
+    :keymaps 'go-mode-map
+    "gd" #'godef-jump
+    "gb" #'pop-tag-mark
+    "gf" #'godef-describe))
 
 ;; docker
 (use-package docker
