@@ -1,6 +1,12 @@
+;;; init.el --- Cary's hydras file  -*- lexical-binding: t; -*-
+
+;;; Commentary:
 ;;^ are a special no width character to help visual spacing in definitions
 
+;;; Code:
+
 (defun terminal ()
+  "Make an ansi terminal buffer."
   (interactive)
   (ansi-term "/bin/bash")
   (rename-buffer "*term*"))
@@ -78,25 +84,28 @@ _b_: balance
 
 (defhydra cg-window (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Window^         ^Split^            ^Text^
-^-^--------------^-^----------------^--^--------------------
-_w_: switch       _s_: horizonal    _rd_: rainbow delimiters
-_l_: last         _v_: vertical     _rt_: resize text
-_R_: rename       _k_: kill
+^Window^         ^Split^            ^Display^
+^-^--------------^-^----------------^-^--------------------
+_w_: switch       _s_: horizonal    _d_: rainbow delimiters
+_l_: last         _v_: vertical     _t_: text size
+_R_: rename       _k_: kill         _n_: toggle line numbers
 _K_: kill         _f_: fullscreen
-^^               _rs_: resize
+^^                _r_: resize
 "
-  ("w"  persp-switch)
-  ("l"  persp-switch-last)
-  ("R"  persp-rename)
-  ("K"  persp-kill)
-  ("s"  split-horizontal/body)
-  ("v"  split-vertical/body)
-  ("k"  delete-window)
-  ("f"  toggle-window-fullscreen)
-  ("rs" split-resize/body)
-  ("rt" text-resize/body)
-  ("rd" rainbow-delimiters-mode)
+  ("w" persp-switch)
+  ("l" persp-switch-last)
+  ("R" persp-rename)
+  ("K" persp-kill)
+
+  ("s" split-horizontal/body)
+  ("v" split-vertical/body)
+  ("k" delete-window)
+  ("f" toggle-window-fullscreen)
+  ("r" split-resize/body)
+
+  ("d" rainbow-delimiters-mode)
+  ("t" text-resize/body)
+  ("n" display-line-numbers-mode)
 
   ("<escape>" nil "quit"))
 
@@ -104,9 +113,9 @@ _K_: kill         _f_: fullscreen
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
 ^Run
-^-^----------------^-^-----------------^-^----------------
-_e_: eshell        _t_: terminal       _d_: docker-compose
-_s_: sync-shell    _a_: async-shell
+^-^---------------^-^-----------------^-^----------------
+_e_: eshell       _s_: sync-shell     _d_: docker-compose
+_t_: terminal     _a_: async-shell
 "
   ("e" eshell)
   ("t" terminal)
