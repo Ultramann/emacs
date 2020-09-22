@@ -279,6 +279,9 @@
     (w3m-goto-url-new-session (concat "google.com/search?q=" query))))
 
 ;; eshell
+(use-package eshell
+  :defines eshell-prompt-function)
+
 (add-hook 'eshell-mode-hook
           (lambda ()
             ;; There's and issue with the way that eshell set's up its
@@ -292,6 +295,24 @@
             (add-to-list 'eshell-visual-commands "top")
             (add-to-list 'eshell-visual-commands "htop")
             (eshell/alias "vim" "find-file $1")))
+
+(defun pwd-home (cwd)
+  "Show home directory as ~ in eshell current working directory, CWD."
+  (interactive)
+  (let* ((home (expand-file-name (getenv "HOME")))
+         (wd (if (equal cwd home) "~" cwd)))
+    (cond ((equal "~" wd) "~")
+	  ((equal "/" wd) "/")
+	  (t (car (last (split-string wd "/")))))))
+
+(setq eshell-prompt-function
+  (lambda ()
+    (concat
+    (user-login-name)
+    ": "
+    (pwd-home (eshell/pwd))
+     " $ "
+   )))
 
 ;; terminal
 (general-define-key
@@ -433,6 +454,7 @@ Needed because they are globally set in the evil config."
 (use-package go-mode
   :defer t
   :config
+  (add-hook 'before-save-hook 'gofmt-before-save)
   (general-define-key
     :states 'normal
     :keymaps 'go-mode-map
