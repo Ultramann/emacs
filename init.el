@@ -308,11 +308,10 @@
 (setq eshell-prompt-function
   (lambda ()
     (concat
-    (user-login-name)
-    ": "
-    (pwd-home (eshell/pwd))
-     " $ "
-   )))
+     (user-login-name)
+     ": "
+     (pwd-home (eshell/pwd))
+     " $ ")))
 
 ;; terminal
 (general-define-key
@@ -550,6 +549,8 @@ Needed because they are globally set in the evil config."
 		 'face 'bold))
 	"   "
 	mode-line-misc-info))
+
+(setq default-directory "~/")
 
 (provide 'init)
 ;;; init.el ends here

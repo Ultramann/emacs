@@ -8,7 +8,11 @@
 (defun terminal ()
   "Make an ansi terminal buffer."
   (interactive)
-  (ansi-term "/bin/bash")
+  (ansi-term (concat
+              (if (file-exists-p "/usr/local/bin/bash")
+                  "/usr/local"
+                "")
+               "/bin/bash"))
   (rename-buffer "*term*"))
 
 ;; Window
