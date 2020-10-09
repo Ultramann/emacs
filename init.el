@@ -1,9 +1,12 @@
 ;;; init.el --- Cary's emacs init file  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; TODO: w3m tabs, icicles, copy of buffer, evil-surround, evil-goggles
+;; TODO: w3m tabs, icicles, evil-surround, evil-goggles
+;; hydras examples for buffer navigation
 ;; w3m filters: https://www.emacswiki.org/emacs/WThreeMFilters
 ;; (winner mode 1), then (winner-undo to restore window config
+;; pyvenv.el:174/310 have super cool methods of interactively passing multiple
+;;                   parameters to a function, could definitely use this
 
 ;;; Code:
 
@@ -65,6 +68,13 @@
 (defvar display-time-default-load-average nil)
 (defvar display-time-string-forms '((format-time-string "%I:%M %p" now)))
 (display-time-mode 1)
+
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x))
+  :config
+  (setq exec-path-from-shell-variables '("PATH")) ;; "PYENV_ROOT"))
+  (exec-path-from-shell-initialize))
 
 ;; general
 (use-package general
@@ -169,19 +179,19 @@
 (use-package rainbow-delimiters
   :ensure t)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-copy-env "PATH"))
-
 (use-package perspective
   :ensure t
+  :defines persp-make-variable-persp-local  ;; for pyvenv
   :init
   (setq persp-initial-frame-name "misc"
 	persp-show-modestring nil)
   :config
   ;; Only set up perspective on startup
   (when (not persp-mode) (persp-mode)))
+  ;; This advice didn't do what I wanted, but is good example
+  ;; Keeping to see the formatting and _r to appease the linter
+  ;; (advice-add #'persp-new :after (lambda (&rest _r) (cd "~/developer")))
+
 
 (defun toggle-window-fullscreen ()
   "Toggle current window to full screen."
@@ -405,7 +415,6 @@
 (defun magit-ex-cmd ()
   "Make q & wq work as expected.
 Needed because they are globally set in the evil config."
-  ;;(make-local-variable 'evil-ex-commands)  TODO: delete this line
   (setq-local evil-ex-commands
 	(mapcar (lambda (cmd) (cons (car cmd) (cdr cmd)))
 		(default-value 'evil-ex-commands)))
@@ -430,6 +439,19 @@ Needed because they are globally set in the evil config."
   :states 'insert
   :keymaps 'python-mode-map
   "RET" #'newline-and-indent)
+
+(use-package pyvenv ;; https://ddavis.io/posts/emacs-python-lsp/
+  :ensure t
+  :init
+  :init
+  (setenv "WORKON_HOME" "~/.pyenv/versions")
+  :config
+  (mapcar
+   'persp-make-variable-persp-local
+   `(exec-path           pyvenv-old-exec-path
+     eshell-path-env     pyvenv-old-eshell-path
+     process-environment pyvenv-old-process-environment
+     pyvenv-virtual-env  pyvenv-virtual-env-name)))
 
 ;; markdown
 (use-package markdown-mode
@@ -493,6 +515,7 @@ Needed because they are globally set in the evil config."
   "u" #'redo
   "c" #'comment-dwim
   "b" #'browse-url-at-point  ;; TODO: might be worth making a w3m hydra at this point
+  "p" #'cg-pyvenv/body
   "g" #'google
   "G" #'google-tab
   "j" #'evil-scroll-down
@@ -549,8 +572,7 @@ Needed because they are globally set in the evil config."
 		 'face 'bold))
 	"   "
 	mode-line-misc-info))
-
-(setq default-directory "~/")
+(cd "~")
 
 (provide 'init)
 ;;; init.el ends here

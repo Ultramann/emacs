@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+;; ----------- Functions -----------
+
 (defun terminal ()
   "Make an ansi terminal buffer."
   (interactive)
@@ -14,6 +16,19 @@
                 "")
                "/bin/bash"))
   (rename-buffer "*term*"))
+
+(defun new-eshell ()
+  "Open a new eshell instance."
+  (interactive)
+  (eshell 'N))
+
+(defun cg-persp-new (name)
+  "Make new pespective given by NAME."
+  (interactive "sNew perspective name: ")
+  (persp-switch name)
+  (find-file "~/developer"))
+
+;; ------------ Hydras ------------
 
 ;; Window
 (defhydra split-horizontal (:hint nil
@@ -33,7 +48,7 @@ _n_: none
   ("f" counsel-find-file)
   ("g" google)
   ("G" google-tab)
-  ("e" eshell)
+  ("e" new-eshell)
   ("t" terminal)
   ("n" nil)
   ("<escape>" delete-window :color teal))
@@ -55,7 +70,7 @@ _n_: none
   ("f" counsel-find-file)
   ("g" google)
   ("G" google-tab)
-  ("e" eshell)
+  ("e" new-eshell)
   ("t" terminal)
   ("n" nil)
   ("<escape>" delete-window :color teal))
@@ -70,9 +85,7 @@ _=_: bigger    _-_: smaller
   ("-" text-scale-decrease)
   ("<escape>" nil "quit"))
 
-(defhydra split-resize (:hint nil
-			 :foreign-keys warn
-			 :quit-key "<escape>")
+(defhydra split-resize (:hint nil :foreign-keys warn :quit-key "<escape>")
   "
 ^Resize Split
 ^-^------------^-^-------------^-^------------^-^---------
@@ -88,28 +101,29 @@ _b_: balance
 
 (defhydra cg-window (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Window^         ^Split^            ^Display^
-^-^--------------^-^----------------^-^--------------------
-_w_: switch       _s_: horizonal    _d_: rainbow delimiters
-_l_: last         _v_: vertical     _t_: text size
-_R_: rename       _k_: kill         _n_: toggle line numbers
-_K_: kill         _f_: fullscreen
-^^                _r_: resize
+^Window^           ^Split^                ^Display^
+^-^----------------^-^--------------------^-^--------------------
+_w_: switch        _s_: horizonal         _d_: rainbow delimiters
+_l_: last          _v_: vertical          _t_: text size
+_r_: rename        _k_: kill              _N_: toggle line numbers
+_n_: new           _f_: fullscreen
+_K_: kill          _R_: resize
 "
   ("w" persp-switch)
   ("l" persp-switch-last)
-  ("R" persp-rename)
+  ("r" persp-rename)
+  ("n" cg-persp-new)
   ("K" persp-kill)
 
   ("s" split-horizontal/body)
   ("v" split-vertical/body)
   ("k" delete-window)
   ("f" toggle-window-fullscreen)
-  ("r" split-resize/body)
+  ("R" split-resize/body)
 
   ("d" rainbow-delimiters-mode)
   ("t" text-resize/body)
-  ("n" display-line-numbers-mode)
+  ("N" display-line-numbers-mode)
 
   ("<escape>" nil "quit"))
 
@@ -117,15 +131,28 @@ _K_: kill         _f_: fullscreen
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
 ^Run
-^-^---------------^-^-----------------^-^----------------
-_e_: eshell       _s_: sync-shell     _d_: docker-compose
-_t_: terminal     _a_: async-shell
+^-^---------------^-^------------------^-^----------------
+_e_: eshell       _s_: sync-shell      _p_: python
+_t_: terminal     _a_: async-shell     _d_: docker-compose
 "
-  ("e" eshell)
+  ("e" new-eshell)
   ("t" terminal)
-  ("d" cg-docker-compose-up)
   ("s" shell-command)
-  ("a" async-shell-command)
+  ("a" async-shell-command)  ;; want to make interactive wrapper for start-process to replace this
+  ("d" cg-docker-compose-up)
+  ("p" run-python)
+  ("<escape>" nil "quit"))
+
+;; Pyenv
+(defhydra cg-pyvenv (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
+  "
+Pyvenv: %`pyvenv-virtual-env-name
+---------------------------------
+_a_: activate
+_d_: deactivate
+"
+  ("a" pyvenv-workon)
+  ("d" pyvenv-deactivate)
   ("<escape>" nil "quit"))
 
 (provide 'hydras)
