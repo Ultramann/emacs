@@ -296,19 +296,20 @@
 (use-package eshell
   :defines eshell-prompt-function)
 
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            ;; There's and issue with the way that eshell set's up its
-            ;; mode map, have to do manually with a hook. See:
-            ;; https://github.com/noctuid/general.el/issues/80
-            (evil-define-key 'insert 'eshell-mode-map
-              (kbd "TAB") (lambda () (interactive) (pcomplete-std-complete)))
-            (evil-local-set-key 'normal (kbd "RET") (kbd "GA"))
-            (defvar eshell-visual-commands)
-            (add-to-list 'eshell-visual-commands "tail")
-            (add-to-list 'eshell-visual-commands "top")
-            (add-to-list 'eshell-visual-commands "htop")
-            (eshell/alias "vim" "find-file $1")))
+(defun eshell-mode-settings ()
+  "Eshell mode settings."
+  ;; There's and issue with the way that eshell set's up its
+  ;; mode map, have to do manually with a hook. See:
+  ;; https://github.com/noctuid/general.el/issues/80
+  (evil-define-key 'insert 'eshell-mode-map
+      (kbd "TAB") (lambda () (interactive) (pcomplete-std-complete)))
+  (evil-local-set-key 'normal (kbd "RET") (kbd "GA"))
+  (defvar eshell-visual-commands)
+  (add-to-list 'eshell-visual-commands "tail")
+  (add-to-list 'eshell-visual-commands "top")
+  (add-to-list 'eshell-visual-commands "htop")
+  (eshell/alias "vim" "find-file $1"))
+(add-hook 'eshell-mode-hook #'eshell-mode-settings)
 
 (defun pwd-home (cwd)
   "Show home directory as ~ in eshell current working directory, CWD."

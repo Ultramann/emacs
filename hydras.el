@@ -7,31 +7,45 @@
 
 ;; ----------- Functions -----------
 
-(defun get-short-persp-current-name ()
-  "Get shortened name of current perspective.
+(defun unique-short-name (NAME)
+  "Get unique name for buffer with base NAME.
 Useful for adding to buffers with multiple instances like shells."
-  (split-string (persp-current-name) "[-_ ]+")) ;; WIP
+  (let* ((name-list (split-string (persp-current-name) "[-_ ]+"))
+         (short-name (if (> (length name-list) 1)
+                         (mapconcat (lambda (p) (substring p nil 1)) name-list "")
+                       (car name-list)))
+         (persp-short-name (concat "*" NAME "-" short-name))
+         (buffer-names (mapcar #'buffer-name (buffer-list)))
+         (total (length (seq-filter (lambda (v) (string-prefix-p persp-short-name v))
+                                    buffer-names)))
+         (short-name-end (concat (if (> total 0)
+                                     (concat "-" (number-to-string total)) "")
+                                 "*")))
+      (concat persp-short-name short-name-end)))
 
 (defun new-terminal ()
   "Make an ansi terminal buffer."
   (interactive)
-  (let ((process-environment '("HOME=/Users/carygoltermann")))
+  (let ((process-environment (seq-filter (lambda (v) (string-prefix-p "HOME=" v))
+                                         process-environment)))
     (ansi-term (concat
                 (if (file-exists-p "/usr/local/bin/bash")
                     "/usr/local"
                   "")
-                "/bin/bash")
-               "term"))
-  )
+                "/bin/bash"))
+  (rename-buffer (unique-short-name "term"))))
 
 (defun new-eshell ()
   "Open a new eshell instance."
   (interactive)
-  (eshell 'N))
+  (eshell)
+  (rename-buffer (unique-short-name "eshell")))
 
-(defun cg-run-python ()
+(defun new-python ()
   "Open python shell based off current perspective."
-  (get-short-persp-current-name)) ;; WIP
+  (interactive)
+  (run-python)
+  (rename-buffer (unique-short-name "python")))
 
 (defun cg-persp-new (name)
   "Make new pespective given by NAME."
@@ -151,7 +165,7 @@ _t_: terminal     _a_: async-shell     _d_: docker-compose
   ("s" shell-command)
   ("a" async-shell-command)  ;; want to make interactive wrapper for start-process to replace this
   ("d" cg-docker-compose-up)
-  ("p" (lambda () (interactive) (run-python nil t)))
+  ("p" new-python)
   ("<escape>" nil "quit"))
 
 ;; Pyenv
