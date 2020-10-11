@@ -7,20 +7,31 @@
 
 ;; ----------- Functions -----------
 
-(defun terminal ()
+(defun get-short-persp-current-name ()
+  "Get shortened name of current perspective.
+Useful for adding to buffers with multiple instances like shells."
+  (split-string (persp-current-name) "[-_ ]+")) ;; WIP
+
+(defun new-terminal ()
   "Make an ansi terminal buffer."
   (interactive)
-  (ansi-term (concat
-              (if (file-exists-p "/usr/local/bin/bash")
-                  "/usr/local"
-                "")
-               "/bin/bash"))
-  (rename-buffer "*term*"))
+  (let ((process-environment '("HOME=/Users/carygoltermann")))
+    (ansi-term (concat
+                (if (file-exists-p "/usr/local/bin/bash")
+                    "/usr/local"
+                  "")
+                "/bin/bash")
+               "term"))
+  )
 
 (defun new-eshell ()
   "Open a new eshell instance."
   (interactive)
   (eshell 'N))
+
+(defun cg-run-python ()
+  "Open python shell based off current perspective."
+  (get-short-persp-current-name)) ;; WIP
 
 (defun cg-persp-new (name)
   "Make new pespective given by NAME."
@@ -49,7 +60,7 @@ _n_: none
   ("g" google)
   ("G" google-tab)
   ("e" new-eshell)
-  ("t" terminal)
+  ("t" new-terminal)
   ("n" nil)
   ("<escape>" delete-window :color teal))
 
@@ -71,7 +82,7 @@ _n_: none
   ("g" google)
   ("G" google-tab)
   ("e" new-eshell)
-  ("t" terminal)
+  ("t" new-terminal)
   ("n" nil)
   ("<escape>" delete-window :color teal))
 
@@ -136,11 +147,11 @@ _e_: eshell       _s_: sync-shell      _p_: python
 _t_: terminal     _a_: async-shell     _d_: docker-compose
 "
   ("e" new-eshell)
-  ("t" terminal)
+  ("t" new-terminal)
   ("s" shell-command)
   ("a" async-shell-command)  ;; want to make interactive wrapper for start-process to replace this
   ("d" cg-docker-compose-up)
-  ("p" run-python)
+  ("p" (lambda () (interactive) (run-python nil t)))
   ("<escape>" nil "quit"))
 
 ;; Pyenv

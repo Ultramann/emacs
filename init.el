@@ -188,7 +188,11 @@
   :config
   ;; Only set up perspective on startup
   (when (not persp-mode) (persp-mode)))
-  ;; This advice didn't do what I wanted, but is good example
+  ;; This advice didn't do what I wanted, but these are good examples
+  ;; (advice-add #'persp-activate :around (lambda (orig_fun &rest r)
+  ;;                                        (print process-environment)
+  ;;                                        (apply orig_fun r)
+  ;;                                        (print process-environment)))
   ;; Keeping to see the formatting and _r to appease the linter
   ;; (advice-add #'persp-new :after (lambda (&rest _r) (cd "~/developer")))
 
@@ -334,11 +338,11 @@
   "C-c"     #'term-send-raw
   "C-v"     #'term-paste)
 
-(general-define-key
-  :states  'normal
-  :keymaps 'term-raw-map
-  "k" #'scroll-down
-  "j" #'scroll-up)
+;; (general-define-key
+;;   :states  'normal
+;;   :keymaps 'term-raw-map
+;;   "k" #'scroll-down
+;;   "j" #'scroll-up)
 
 (defun term-mode-settings ()
   "Kill terminal w/o prompt."
@@ -358,9 +362,34 @@
 	    (kill-buffer ,buff))))))
 (add-hook 'term-exec-hook #'exit-term-settings)
 
+(defun term-normal-state ()
+  "Enable `term-line-mode' when in normal state in `term-mode' buffer.
+Also make the buffer read only."
+  (term-line-mode)
+  (read-only-mode 1))
+
+(defun term-insert-state ()
+  "Enable `term-char-mode' when in insert state in a `term-mode' buffer."
+  (when (get-buffer-process (current-buffer))
+    (read-only-mode -1)
+    (term-char-mode)))
+
+(defun term-evil-bindings ()
+  "Enable term support for vim and hybrid editing styles."
+  (add-hook 'evil-hybrid-state-entry-hook #'term-insert-state nil t)
+  (add-hook 'evil-insert-state-entry-hook #'term-insert-state nil t)
+  (add-hook 'evil-hybrid-state-exit-hook #'term-normal-state nil t)
+  (add-hook 'evil-insert-state-exit-hook #'term-normal-state nil t))
+
+(defvar term-char-mode-point-at-process-mark t)
+(add-hook 'term-mode-hook 'term-evil-bindings)
+
 ;; dired
 (use-package dired-single
   :ensure t
+  :init
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired nil))
   :config
   (general-define-key  ;; TODO: consider doing this with a hydra
     :states 'normal
@@ -443,15 +472,19 @@ Needed because they are globally set in the evil config."
 (use-package pyvenv ;; https://ddavis.io/posts/emacs-python-lsp/
   :ensure t
   :init
-  :init
   (setenv "WORKON_HOME" "~/.pyenv/versions")
+  (defvar python-shell-virtualenv-path nil)  ;; may not need this?
+  (defvar python-shell-virtualenv-root nil)  ;; may not need this?
   :config
   (mapcar
    'persp-make-variable-persp-local
-   `(exec-path           pyvenv-old-exec-path
+   `(python-shell-virtualenv-path  ;; may not need this?
+     python-shell-virtualenv-root  ;; may not need this?
+     pyvenv-workon       pyvenv-activate
+     pyvenv-virtual-env  pyvenv-virtual-env-name
+     exec-path           pyvenv-old-exec-path
      eshell-path-env     pyvenv-old-eshell-path
-     process-environment pyvenv-old-process-environment
-     pyvenv-virtual-env  pyvenv-virtual-env-name)))
+     process-environment pyvenv-old-process-environment)))
 
 ;; markdown
 (use-package markdown-mode
@@ -509,6 +542,7 @@ Needed because they are globally set in the evil config."
   :keymaps 'override  ;; for dired
   :prefix "SPC"
   "/" #'swiper
+  "e" #'eval-last-sexp
   "w" #'cg-window/body
   "r" #'cg-run/body
   "o" #'evil-ex-nohighlight
