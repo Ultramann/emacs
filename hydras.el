@@ -7,20 +7,20 @@
 
 ;; ----------- Functions -----------
 
-(defun unique-short-name (NAME)
-  "Get unique name for buffer with base NAME.
+(defun short-name (name &optional unique)
+  "Get, unique if UNIQUE, name for buffer with base NAME and short persp at end.
 Useful for adding to buffers with multiple instances like shells."
   (let* ((name-list (split-string (persp-current-name) "[-_ ]+"))
          (short-name (if (> (length name-list) 1)
                          (mapconcat (lambda (p) (substring p nil 1)) name-list "")
                        (car name-list)))
-         (persp-short-name (concat "*" NAME "-" short-name))
+         (persp-short-name (concat name "-" short-name))
          (buffer-names (mapcar #'buffer-name (buffer-list)))
          (total (length (seq-filter (lambda (v) (string-prefix-p persp-short-name v))
                                     buffer-names)))
-         (short-name-end (concat (if (> total 0)
-                                     (concat "-" (number-to-string total)) "")
-                                 "*")))
+         (short-name-end (if (and unique (> total 0))
+                             (concat "-" (number-to-string total))
+                           "")))
       (concat persp-short-name short-name-end)))
 
 (defun new-terminal ()
@@ -32,26 +32,36 @@ Useful for adding to buffers with multiple instances like shells."
                 (if (file-exists-p "/usr/local/bin/bash")
                     "/usr/local"
                   "")
-                "/bin/bash"))
-  (rename-buffer (unique-short-name "term"))))
+                "/bin/bash")
+               (short-name "term" t))))
 
 (defun new-eshell ()
   "Open a new eshell instance."
   (interactive)
   (eshell)
-  (rename-buffer (unique-short-name "eshell")))
+  (rename-buffer (concat "*" (short-name "eshell" t) "*")))
 
 (defun new-python ()
   "Open python shell based off current perspective."
   (interactive)
   (run-python)
-  (rename-buffer (unique-short-name "python")))
+  (rename-buffer (concat "*" (short-name "python" t) "*")))
 
 (defun cg-persp-new (name)
   "Make new pespective given by NAME."
   (interactive "sNew perspective name: ")
-  (persp-switch name)
-  (find-file "~/developer"))
+  (let ((already-exists (member name (persp-names))))
+    (persp-switch name)
+    (when (not already-exists)
+      (find-file "~/developer"))))
+
+(defun toggle-window-fullscreen ()
+  "Toggle current window to full screen."
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+      (progn (window-configuration-to-register '_)
+  	     (delete-other-windows))))
 
 ;; ------------ Hydras ------------
 
@@ -183,7 +193,7 @@ Useful for adding to buffers with multiple instances like shells."
 ;; Run
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
- ^^   Run
+ ^ ^  Run
  ^-^---------------^-^------------------^-^----------------
  _e_: eshell       _s_: sync-shell      _p_: python
  _t_: terminal     _a_: async-shell     _d_: docker-compose
@@ -199,10 +209,10 @@ Useful for adding to buffers with multiple instances like shells."
 ;; Pyenv
 (defhydra cg-pyvenv (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-Pyvenv: %`pyvenv-virtual-env-name
----------------------------------
-_a_: activate
-_d_: deactivate
+ ^ ^  Pyvenv: %`pyvenv-virtual-env-name
+ ---------------------------------
+ _a_: activate
+ _d_: deactivate
 "
   ("a" pyvenv-workon)
   ("d" pyvenv-deactivate)

@@ -105,6 +105,11 @@
    `(company-scrollbar-fg ((t :background ,boss-mono-light)))
    `(company-scrollbar-bg ((t :background ,boss-mono-dark)))
 
+   ;; flycheck
+   `(flycheck-fringe-info ((t :foreground ,boss-green)))
+   `(flycheck-fringe-warning ((t :foreground ,boss-yellow)))
+   `(flycheck-fringe-error ((t :foreground ,boss-red)))
+
    ;; compilation
    `(compilation-face ((t :foreground ,boss-fg)))
    `(compilation-info ((t :background ,boss-bg-light :foreground ,boss-green)))
@@ -117,6 +122,13 @@
    `(lazy-highlight ((t :foreground ,boss-yellow-bright)))
    `(evil-ex-substitute-matches ((t :foreground ,boss-yellow-bright :background ,boss-bg)))
    `(match ((t :foreground ,boss-yellow-bright :background ,boss-bg :underline t)))
+
+   ;; swiper
+   ;; there's still something weird about these faces that I'd like to fix, but this works
+   `(swiper-background-match-face-2 ((t :background ,boss-bg :foreground ,boss-yellow-bright)))
+   `(swiper-background-match-face-3 ((t :inherit swiper-background-match-face-2)))
+   `(swiper-match-face-2 ((t :background ,boss-bg :foreground ,boss-yellow-bright)))
+   `(swiper-match-face-3 ((t :inherit swiper-match-face-2)))
 
    ;; dired-mode
    '(dired-directory ((t :inherit font-lock-keyword-face)))
@@ -256,3 +268,4 @@
    ))
 
 (provide-theme 'boss)
+;;; boss-theme.el ends here

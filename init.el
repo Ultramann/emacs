@@ -10,6 +10,8 @@
 
 ;;; Code:
 
+(defvar first-load t)  ;; set to nil at end of init if t
+
 ;; packages
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -62,7 +64,6 @@
 (column-number-mode 1)
 (global-visual-line-mode t)
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
-(fringe-mode 0) ;; might want to remove for git/flycheck/flake8
 
 ;; time
 (defvar display-time-default-load-average nil)
@@ -140,6 +141,7 @@
     [remap evil-next-line]     #'evil-next-visual-line
     "C-v"                      #'evil-visual-char
     "v"                        #'evil-visual-block
+    "gb"                       #'pop-tag-mark
     "'"                        #'evil-jump-backward-swap
     "*"                        #'evil-ex-search-symbol-forward
     "#"                        #'evil-ex-search-symbol-backward)
@@ -152,6 +154,9 @@
 ;; parenthesis
 (defvar show-paren-delay 0)
 (show-paren-mode 1)
+
+(use-package rainbow-delimiters
+  :ensure t)
 
 ;; tabs
 (defun set-up-tab-width (width)
@@ -176,8 +181,12 @@
 (add-hook 'prog-mode-hook #'prog-text-settings)
 (add-hook 'text-mode-hook #'prog-text-settings)
 
-(use-package rainbow-delimiters
-  :ensure t)
+;; fringes
+(fringe-mode 0)
+
+(defun enable-window-fringes ()
+  "Enable fringes in window."
+  (setq left-fringe-width 8))
 
 (use-package perspective
   :ensure t
@@ -187,7 +196,7 @@
 	persp-show-modestring nil)
   :config
   ;; Only set up perspective on startup
-  (when (not persp-mode) (persp-mode)))
+  (when first-load (persp-mode)))
   ;; This advice didn't do what I wanted, but these are good examples
   ;; (advice-add #'persp-activate :around (lambda (orig_fun &rest r)
   ;;                                        (print process-environment)
@@ -195,15 +204,6 @@
   ;;                                        (print process-environment)))
   ;; Keeping to see the formatting and _r to appease the linter
   ;; (advice-add #'persp-new :after (lambda (&rest _r) (cd "~/developer")))
-
-
-(defun toggle-window-fullscreen ()
-  "Toggle current window to full screen."
-  (interactive)
-  (if (= 1 (length (window-list)))
-      (jump-to-register '_)
-      (progn (window-configuration-to-register '_)
-  	     (delete-other-windows))))
 
 (use-package ivy
   :ensure t
@@ -440,7 +440,8 @@ Also make the buffer read only."
    :keymaps 'magit-status-mode-map
    "J" #'magit-section-forward
    "K" #'magit-section-backward)
-  (add-hook 'after-save-hook #'magit-after-save-refresh-status t))
+  (add-hook 'after-save-hook #'magit-after-save-refresh-status t)
+  (add-hook 'magit-mode-hook 'enable-window-fringes))
 
 (defun magit-ex-cmd ()
   "Make q & wq work as expected.
@@ -463,12 +464,41 @@ Needed because they are globally set in the evil config."
 (add-hook 'python-mode-hook
           (lambda ()
             (setq flycheck-checker 'python-flake8)
+            (enable-window-fringes)
             (make-local-variable 'write-file-functions)
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
+;; re-define function that generates python buffer name
+;; necessary so that elpy send code functionality sends
+;; to the right buffer
+(eval-after-load "python"
+  '(defun python-shell-get-process-name (dedicated)
+     (if dedicated
+         (format "%s[%s]" (short-name "python") (buffer-name))
+       (short-name "python"))))
+
 (general-define-key
   :states 'insert
   :keymaps 'python-mode-map
   "RET" #'newline-and-indent)
+
+(use-package elpy
+  :ensure t
+  :defer t
+  :defines elpy-rpc-backend
+  :init
+  (advice-add 'python-mode :before 'elpy-enable)
+  (setq elpy-rpc-backend "jedi"
+        elpy-rpc-virtualenv-path 'current)
+  :config
+  (when (require 'flycheck nil t)
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))))
+
+(general-define-key
+  :states 'normal
+  :keymaps 'python-mode-map
+  "gD" #'elpy-doc
+  "gd" #'elpy-goto-definition)
 
 (use-package pyvenv ;; https://ddavis.io/posts/emacs-python-lsp/
   :ensure t
@@ -476,6 +506,7 @@ Needed because they are globally set in the evil config."
   (setenv "WORKON_HOME" "~/.pyenv/versions")
   (defvar python-shell-virtualenv-path nil)  ;; may not need this?
   (defvar python-shell-virtualenv-root nil)  ;; may not need this?
+  (setq pyvenv-mode-line-indicator "")
   :config
   (mapcar
    'persp-make-variable-persp-local
@@ -514,7 +545,6 @@ Needed because they are globally set in the evil config."
     :states 'normal
     :keymaps 'go-mode-map
     "gd" #'godef-jump
-    "gb" #'pop-tag-mark
     "gf" #'godef-describe))
 
 ;; docker
@@ -607,7 +637,7 @@ Needed because they are globally set in the evil config."
 		 'face 'bold))
 	"   "
 	mode-line-misc-info))
-(cd "~")
+(when first-load (progn (cd "~") (setq first-load nil)))
 
 (provide 'init)
 ;;; init.el ends here
