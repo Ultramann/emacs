@@ -62,12 +62,13 @@ Useful for adding to buffers with multiple instances like shells."
 			    :post (progn (split-window-right)
 					 (call-interactively 'evil-window-right)))
   "
-^Horizonal
-^-^------------^-^----------------^-^--------
-_b_: buffer    _g_: google        _e_: eshell
-_f_: file      _G_: google-tab    _t_: terminal
-_n_: none
-[_<escape>_]: quit
+ ^ ^  Horizonal
+ ^-^------------^-^----------------^-^----------
+ _b_: buffer    _g_: google        _e_: eshell
+ _f_: file      _G_: google-tab    _t_: terminal
+ _n_: none
+
+ [_<escape>_]: quit
 "
   ("b" persp-ivy-switch-buffer)
   ("f" counsel-find-file)
@@ -84,12 +85,35 @@ _n_: none
 			  :post (progn (split-window-below)
 				       (call-interactively 'evil-window-down)))
   "
-^Vertical
-^-^------------^-^----------------^-^--------
-_b_: buffer    _g_: google        _e_: eshell
-_f_: file      _G_: google-tab    _t_: terminal
-_n_: none
-[_<escape>_]: quit
+ ^ ^  Vertical
+ ^-^------------^-^----------------^-^----------
+ _b_: buffer    _g_: google        _e_: eshell
+ _f_: file      _G_: google-tab    _t_: terminal
+ _n_: none
+
+ [_<escape>_]: quit
+"
+  ("b" persp-ivy-switch-buffer)
+  ("f" counsel-find-file)
+  ("g" google)
+  ("G" google-tab)
+  ("e" new-eshell)
+  ("t" new-terminal)
+  ("n" nil)
+  ("<escape>" delete-window :color teal))
+
+(defhydra other-split (:hint nil
+			:foreign-keys warn
+			:exit t
+			:post (switch-to-buffer-other-window (current-buffer)))
+  "
+ ^ ^  Other Split
+ ^-^------------^-^----------------^-^----------
+ _b_: buffer    _g_: google        _e_: eshell
+ _f_: file      _G_: google-tab    _t_: terminal
+ _n_: none
+
+ [_<escape>_]: quit
 "
   ("b" persp-ivy-switch-buffer)
   ("f" counsel-find-file)
@@ -102,9 +126,10 @@ _n_: none
 
 (defhydra text-resize (:hint nil :foreign-keys warn :quit-key "<escape>")
   "
-^Resize Text
-^-^------------^-^---------
-_=_: bigger    _-_: smaller
+ ^ ^  Resize Text
+ ^-^------------^-^---------
+ _=_: bigger    _-_: smaller
+
 "
   ("=" text-scale-increase)
   ("-" text-scale-decrease)
@@ -112,10 +137,11 @@ _=_: bigger    _-_: smaller
 
 (defhydra split-resize (:hint nil :foreign-keys warn :quit-key "<escape>")
   "
-^Resize Split
-^-^------------^-^-------------^-^------------^-^---------
-_l_: wider    _h_: narrower    _k_: taller    _j_: shorter
-_b_: balance
+  ^ ^  Resize Split
+  ^-^------------^-^-------------^-^------------^-^---------
+  _l_: wider    _h_: narrower    _k_: taller    _j_: shorter
+  _b_: balance
+
 "
   ("l" enlarge-window-horizontally)
   ("h" shrink-window-horizontally)
@@ -126,13 +152,14 @@ _b_: balance
 
 (defhydra cg-window (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Window^           ^Split^                ^Display^
-^-^----------------^-^--------------------^-^--------------------
-_w_: switch        _s_: horizonal         _d_: rainbow delimiters
-_l_: last          _v_: vertical          _t_: text size
-_r_: rename        _k_: kill              _N_: toggle line numbers
-_n_: new           _f_: fullscreen
-_K_: kill          _R_: resize
+ ^ ^  Window        ^ ^  Split             ^ ^  Display
+ ^-^----------------^-^--------------------^-^--------------------
+ _w_: switch        _s_: horizonal         _d_: rainbow delimiters
+ _l_: last          _v_: vertical          _t_: text size
+ _r_: rename        _o_: other             _N_: toggle line numbers
+ _n_: new           _f_: fullscreen
+ _K_: kill          _k_: kill
+ ^ ^                _R_: resize
 "
   ("w" persp-switch)
   ("l" persp-switch-last)
@@ -142,8 +169,9 @@ _K_: kill          _R_: resize
 
   ("s" split-horizontal/body)
   ("v" split-vertical/body)
-  ("k" delete-window)
+  ("o" other-split/body)
   ("f" toggle-window-fullscreen)
+  ("k" delete-window)
   ("R" split-resize/body)
 
   ("d" rainbow-delimiters-mode)
@@ -155,10 +183,10 @@ _K_: kill          _R_: resize
 ;; Run
 (defhydra cg-run (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
-^Run
-^-^---------------^-^------------------^-^----------------
-_e_: eshell       _s_: sync-shell      _p_: python
-_t_: terminal     _a_: async-shell     _d_: docker-compose
+ ^^   Run
+ ^-^---------------^-^------------------^-^----------------
+ _e_: eshell       _s_: sync-shell      _p_: python
+ _t_: terminal     _a_: async-shell     _d_: docker-compose
 "
   ("e" new-eshell)
   ("t" new-terminal)
