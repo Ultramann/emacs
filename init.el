@@ -339,12 +339,6 @@
   "C-c"     #'term-send-raw
   "C-v"     #'term-paste)
 
-;; (general-define-key
-;;   :states  'normal
-;;   :keymaps 'term-raw-map
-;;   "k" #'scroll-down
-;;   "j" #'scroll-up)
-
 (defun term-mode-settings ()
   "Kill terminal w/o prompt."
   (let ((proc (get-buffer-process (current-buffer))))
@@ -489,6 +483,7 @@ Needed because they are globally set in the evil config."
   :init
   (advice-add 'python-mode :before 'elpy-enable)
   (setq elpy-rpc-backend "jedi"
+        elpy-shell-echo-output nil
         elpy-rpc-virtualenv-path 'current)
   :config
   (when (require 'flycheck nil t)
@@ -499,6 +494,11 @@ Needed because they are globally set in the evil config."
   :keymaps 'python-mode-map
   "gD" #'elpy-doc
   "gd" #'elpy-goto-definition)
+
+(advice-add
+ #'elpy-shell-switch-to-shell
+ :after
+ (lambda (&rest _r) (goto-char (point-max))))
 
 (use-package pyvenv ;; https://ddavis.io/posts/emacs-python-lsp/
   :ensure t
