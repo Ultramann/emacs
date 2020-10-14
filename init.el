@@ -207,6 +207,8 @@
 
 (use-package ivy
   :ensure t
+  :init
+  (defvar ivy-case-fold-search-default nil)
   :config
   (ivy-mode 1)
   (evil-collection-init 'ivy))
