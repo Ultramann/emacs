@@ -343,6 +343,7 @@
 
 (defun term-mode-settings ()
   "Kill terminal w/o prompt."
+  (auto-fill-mode -1)  ;; required to make EOL stuff work at prompt input
   (let ((proc (get-buffer-process (current-buffer))))
     (when (processp proc)
       (set-process-query-on-exit-flag proc nil))))

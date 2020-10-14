@@ -25,6 +25,15 @@ Useful for adding to buffers with multiple instances like shells."
 
 (defun new-terminal ()
   "Make an ansi terminal buffer."
+  ;; Note, using bash as the terminal in the ansi-term emulator, for some reason,
+  ;; requires reall specific character sequences while customizing the prompt,
+  ;; if \[ and \] are used then ansi-term seems to get confused when the line end
+  ;; is reached while inputting a command and wraps on the same line, overwriting
+  ;; the beginning of the prompt. Using \001 and \002 instead seems to fix this:
+  ;; blue="\001$(tput setaf 4)\002"
+  ;; reset="\001$(tput sgr0)\002"
+  ;; export PS1="${blue}Ultramann: \W \$ ${reset}"
+  ;; unset blue reset
   (interactive)
   (let ((process-environment (seq-filter (lambda (v) (string-prefix-p "HOME=" v))
                                          process-environment)))
