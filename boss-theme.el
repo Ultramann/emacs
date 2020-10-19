@@ -64,22 +64,7 @@
    `(secondary-selection ((t :background ,boss-mono-dark)))
    `(trailing-whitespace ((t :foreground ,boss-red-bright :underline t)))
 
-   `(query-replace ((t :inherit isearch)))
-   `(minibuffer-prompt ((t :foreground ,boss-mono-light)))
-   `(show-paren-mismatch ((t :background ,boss-pink)))
-   `(show-paren-match ((t :foreground ,boss-pink)))
-   `(rainbow-delimiters-depth-1-face ((t :foreground ,boss-purple-bright)))
-   `(rainbow-delimiters-depth-2-face ((t :foreground ,boss-red-bright)))
-   `(rainbow-delimiters-depth-3-face ((t :foreground ,boss-blue-light)))
-   `(rainbow-delimiters-depth-4-face ((t :foreground ,boss-green-bright)))
-   `(rainbow-delimiters-depth-5-face ((t :foreground ,boss-yellow-bright)))
-   `(rainbow-delimiters-depth-6-face ((t :foreground ,boss-red-bright)))
-   `(rainbow-delimiters-depth-7-face ((t :foreground ,boss-purple-bright)))
-   `(rainbow-delimiters-depth-8-face ((t :foreground ,boss-blue-light)))
-   `(rainbow-delimiters-depth-9-face ((t :foreground ,boss-green-bright)))
-   `(rainbow-delimiters-unmached-face ((t :background ,boss-pink)))
-   `(rainbow-delimiters-mismached-face ((t :background ,boss-pink)))
-
+   ;; types
    `(font-lock-builtin-face ((t :foreground ,boss-blue-light)))
    `(font-lock-comment-face ((t :foreground ,boss-mono-dark)))
    `(font-lock-comment-delimiter-face ((default :inherit font-lock-comment-face)))
@@ -92,6 +77,24 @@
    `(font-lock-constant-face ((t :foreground ,boss-blue-med)))
    `(font-lock-variable-name-face ((t :inherit default)))
    `(font-lock-warning-face ((t :foreground ,boss-mono-dark :weight bold)))
+
+   ;; misc
+   `(query-replace ((t :inherit isearch)))
+   `(minibuffer-prompt ((t :foreground ,boss-mono-light)))
+   `(show-paren-mismatch ((t :background ,boss-pink)))
+   `(show-paren-match ((t :foreground ,boss-pink)))
+   `(makefile-space ((t :inherit font-lock-comment-face)))
+   `(rainbow-delimiters-depth-1-face ((t :foreground ,boss-purple-bright)))
+   `(rainbow-delimiters-depth-2-face ((t :foreground ,boss-red-bright)))
+   `(rainbow-delimiters-depth-3-face ((t :foreground ,boss-blue-light)))
+   `(rainbow-delimiters-depth-4-face ((t :foreground ,boss-green-bright)))
+   `(rainbow-delimiters-depth-5-face ((t :foreground ,boss-yellow-bright)))
+   `(rainbow-delimiters-depth-6-face ((t :foreground ,boss-red-bright)))
+   `(rainbow-delimiters-depth-7-face ((t :foreground ,boss-purple-bright)))
+   `(rainbow-delimiters-depth-8-face ((t :foreground ,boss-blue-light)))
+   `(rainbow-delimiters-depth-9-face ((t :foreground ,boss-green-bright)))
+   `(rainbow-delimiters-unmached-face ((t :background ,boss-pink)))
+   `(rainbow-delimiters-mismached-face ((t :background ,boss-pink)))
 
    ;; company-mode
    `(company-tooltip ((t :foreground ,boss-fg :background ,boss-bg-highlight)))
