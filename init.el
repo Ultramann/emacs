@@ -633,7 +633,9 @@ Needed because they are globally set in the evil config."
         '(:eval (propertize (buffer-name) 'face 'bold))
  	"   "
         '(:eval (when (bound-and-true-p display-line-numbers-mode)
-                       "-%l|%c   "))
+                      (concat "-%l|%c:"
+                              (format "%d" (/ (point) 0.01 (point-max)))
+                              "%%   ")))
 	'(:eval (propertize (if vc-mode
 				(remove-git vc-mode)
 			        "-")
