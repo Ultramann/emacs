@@ -219,12 +219,13 @@ Useful for adding to buffers with multiple instances like shells."
 (defhydra cg-pyvenv (:hint nil :foreign-keys warn :exit t :quit-key "<escape>")
   "
  ^ ^  Pyvenv: %`pyvenv-virtual-env-name
- ---------------------------------
- _a_: activate
+ ^-^----------------^-^--------------
+ _a_: activate      _r_: restart jedi
  _d_: deactivate
 "
   ("a" pyvenv-workon)
   ("d" pyvenv-deactivate)
+  ("r" elpy-rpc-restart)
   ("<escape>" nil "quit"))
 
 (provide 'hydras)
