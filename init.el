@@ -412,12 +412,40 @@ Also make the buffer read only."
     "RET" #'dired-single-buffer
     "^"   #'dired-single-up-directory))
 
+(evil-collection-init 'proced)
+
 ;; xref -- used when grepping from dired
+(defun xref-show-location-at-point-other-window ()
+  "Display the source of xref at point in the other window."
+  (interactive)
+  (let* ((xref (xref--item-at-point))
+         (xref--current-item xref)
+         (location (xref-item-location xref))
+         (marker (xref-location-marker location))
+         (buf (marker-buffer marker)))
+    (when xref
+      (switch-to-buffer-other-window buf)
+      (xref--show-pos-in-buf marker buf))))
+
+(defun xref-next-line-other-window ()
+  "Move to the next xref and display its source in other window."
+  (interactive)
+  (xref--search-property 'xref-item)
+  (xref-show-location-at-point-other-window))
+
+(defun xref-prev-line-other-window ()
+  "Move to the previous xref and display its source in other window."
+  (interactive)
+  (xref--search-property 'xref-item t)
+  (xref-show-location-at-point-other-window))
+
 (general-define-key
  :states 'normal
  :keymaps 'xref--xref-buffer-mode-map
- "TAB" #'xref-quit-and-goto-xref
- "o"   #'xref-show-location-at-point
+ "RET" #'xref-quit-and-goto-xref
+ "TAB" #'xref-show-location-at-point-other-window
+ "n"   #'xref-next-line
+ "N"   #'xref-prev-line
  "r"   #'xref-query-replace-in-results)
 
 ;; magit
