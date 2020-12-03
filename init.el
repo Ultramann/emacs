@@ -8,6 +8,15 @@
 ;; pyvenv.el:174/310 have super cool methods of interactively passing multiple
 ;;                   parameters to a function, could definitely use this
 
+;;; Notes:
+;; (declare-function ...) can replace use-package defines?
+
+;; Substitute all function defintions with no params to have new parameter match
+;; and capture group with \(...\), group is def [^(]+, def followed by 1 or more
+;; of anything that's not a (. Reference group with \1 in the substition string
+;; and add the new parameter:
+;; :%s/\(def [^(]+\)(/\1(new_param/
+
 ;;; Code:
 
 (defvar first-load t)  ;; set to nil at end of init if t
@@ -159,11 +168,17 @@
   :ensure t)
 
 ;; tabs
+;; delete back full tab width
+(setq backward-delete-char-untabify-method 'hungry)
+
 (defun set-up-tab-width (width)
-  "Set tab stop list to multiples of WIDTH, and evil shift width to WIDTH."
-  (setq-local tab-stop-list (mapcar (lambda (tab-stop) (* width tab-stop))
-                                    '(1 2 3)))
+  "Set local 'tab-width' to WIDTH, and 'evil-shift-width' to WIDTH."
+  (setq-local tab-width width)
   (setq-local evil-shift-width width))
+
+(defun enable-tabs ()
+  "Set 'indent-tabs-mode' to true in buffer."
+  (setq-local indent-tabs-mode t))
 
 ;; prog and text modes
 (defun prog-text-settings ()
@@ -174,8 +189,6 @@
   (setq-local show-trailing-whitespace t)
   ;; Don't use tabs, just spaces
   (setq-local indent-tabs-mode nil)
-  ;; tab is goes to tab stops
-  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
   ;; default tab setup
   (set-up-tab-width 4))
 (add-hook 'prog-mode-hook #'prog-text-settings)
@@ -193,7 +206,7 @@
   :defines persp-make-variable-persp-local  ;; for pyvenv
   :init
   (setq persp-initial-frame-name "misc"
-	persp-show-modestring nil)
+        persp-show-modestring nil)
   :config
   ;; Only set up perspective on startup
   (when first-load (persp-mode)))
@@ -211,6 +224,7 @@
   (defvar ivy-case-fold-search-default nil)
   :config
   (ivy-mode 1)
+  (ivy-set-actions 'persp-ivy-switch-buffer '(("d" kill-buffer "delete")))
   (evil-collection-init 'ivy))
 ;; TODO: take a look at how ivy and swiper work together
 ;; esp re: escape exiting minibuffer from evil-collection init
@@ -295,8 +309,17 @@
     (w3m-goto-url-new-session (concat "google.com/search?q=" query))))
 
 ;; eshell
-(use-package eshell
-  :defines eshell-prompt-function)
+;; if the defvar eshell-prompt-function works then can removoe the following
+;; (use-package eshell
+;;   :defines eshell-prompt-function)
+
+(defvar eshell-prompt-function
+  (lambda ()
+    (concat
+     (user-login-name)
+     ": "
+     (pwd-home (eshell/pwd))
+     " $ ")))
 
 (defun eshell-mode-settings ()
   "Eshell mode settings."
@@ -321,14 +344,6 @@
     (cond ((equal "~" wd) "~")
 	  ((equal "/" wd) "/")
 	  (t (car (last (split-string wd "/")))))))
-
-(setq eshell-prompt-function
-  (lambda ()
-    (concat
-     (user-login-name)
-     ": "
-     (pwd-home (eshell/pwd))
-     " $ ")))
 
 ;; terminal
 (general-define-key
@@ -446,11 +461,13 @@ Also make the buffer read only."
  "TAB" #'xref-show-location-at-point-other-window
  "n"   #'xref-next-line
  "N"   #'xref-prev-line
- "r"   #'xref-query-replace-in-results)
+ "s"   #'xref-query-replace-in-results)
 
 ;; magit
 (use-package magit
-  :ensure t)
+  :ensure t
+  :init
+  (defvar magit-push-current-set-remote-if-missing nil))
 (use-package evil-magit
   :ensure t
   :defer 1
@@ -489,6 +506,8 @@ Needed because they are globally set in the evil config."
 (add-hook 'python-mode-hook
           (lambda ()
             (setq flycheck-checker 'python-flake8)
+            (setq-local indent-line-function 'insert-tab)
+            ;; (defvar python-indent-offset 4)
             (enable-window-fringes)
             (make-local-variable 'write-file-functions)
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
@@ -549,6 +568,24 @@ Needed because they are globally set in the evil config."
      eshell-path-env     pyvenv-old-eshell-path
      process-environment pyvenv-old-process-environment)))
 
+;; go
+(use-package go-mode
+  :defer t
+  :config
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (general-define-key
+    :states 'normal
+    :keymaps 'go-mode-map
+    "gd" #'godef-jump
+    "gf" #'godef-describe))
+
+;; docker
+(use-package docker
+  :ensure t)
+
+;; make
+(add-hook 'makefile-mode-hook 'enable-tabs)
+
 ;; markdown
 (use-package markdown-mode
   :ensure t
@@ -565,22 +602,10 @@ Needed because they are globally set in the evil config."
 ;; yaml
 (use-package yaml-mode
   :ensure t
-  :defer t)
-
-;; go
-(use-package go-mode
   :defer t
-  :config
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (general-define-key
-    :states 'normal
-    :keymaps 'go-mode-map
-    "gd" #'godef-jump
-    "gf" #'godef-describe))
-
-;; docker
-(use-package docker
-  :ensure t)
+  :mode (("\\.yml\\'" . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode)
+         ("\\.tpl\\'" . yaml-mode)))
 
 (define-transient-command cg-docker-compose-up ()
   "Transient for \"docker-compose up\"."
